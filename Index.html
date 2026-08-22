@@ -1410,8 +1410,11 @@
           btn.className = 'cal-layer-btn chip-btn px-3 py-1 rounded-xl text-xs font-medium transition shadow-2xs bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
         }
       });
-      if (APP_DATA.calViewMode === 'agenda') renderAgendaView();
-      else renderGoogleCalendar();
+      if (APP_DATA.calViewMode === 'agenda') {
+        renderAgendaView();
+      } else {
+        renderGoogleCalendar();
+      }
       renderModule3Calendar();
     }
 
@@ -1428,8 +1431,11 @@
       const now = new Date();
       const currentShift = findShiftForDate(now);
 
-      if (APP_DATA.calViewMode === 'agenda') renderAgendaView();
-      else renderGoogleCalendar();
+      if (APP_DATA.calViewMode === 'agenda') {
+        renderAgendaView();
+      } else {
+        renderGoogleCalendar();
+      }
       
       renderUnifiedDriverCards(currentShift ? currentShift.Driver_ID : null);
       renderLogsTable();
@@ -1444,8 +1450,11 @@
         APP_DATA.calMonth = 11;
         APP_DATA.calYear--;
       }
-      if (APP_DATA.calViewMode === 'agenda') renderAgendaView();
-      else renderGoogleCalendar();
+      if (APP_DATA.calViewMode === 'agenda') {
+        renderAgendaView();
+      } else {
+        renderGoogleCalendar();
+      }
     }
 
     function jumpCalToToday() {
@@ -1453,8 +1462,11 @@
       APP_DATA.calYear = now.getFullYear();
       APP_DATA.calMonth = now.getMonth();
       APP_DATA.agendaDate = formatDate(now);
-      if (APP_DATA.calViewMode === 'agenda') renderAgendaView();
-      else renderGoogleCalendar();
+      if (APP_DATA.calViewMode === 'agenda') {
+        renderAgendaView();
+      } else {
+        renderGoogleCalendar();
+      }
     }
 
     // ==========================================
@@ -2182,7 +2194,11 @@
         if (act === dClean || act.includes(dClean.split(' ')[0])) {
           total++;
           const isOffShift = log.Work_Type && (log.Work_Type.includes('นอก') || log.Work_Type.includes('เสริม'));
-          if (isOffShift) cover++; else onShift++;
+          if (isOffShift) {
+            cover++;
+          } else {
+            onShift++;
+          }
 
           const tType = (log.Trip_Type || '').trim();
           if (tType.includes('1.') || tType.includes('ค้าง')) {

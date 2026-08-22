@@ -221,7 +221,7 @@
           </div>
         </div>
 
-        <!-- Calendar Layer Filter Chips & Driver Legend -->
+        <!-- Calendar Layer Filter Chips & Driver Legend & View Mode Switcher -->
         <div class="flex flex-wrap items-center justify-between gap-2.5 text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-200/80">
           <div class="flex items-center gap-1.5 flex-wrap">
             <span class="text-slate-600 text-2xs font-bold mr-1 flex items-center gap-1">
@@ -240,15 +240,28 @@
               📅 เฉพาะรอบเวร
             </button>
           </div>
-          <div class="flex flex-wrap items-center gap-1.5">
-            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-blue-100 text-blue-800 text-2xs font-medium"><span class="w-2 h-2 rounded-full bg-blue-600"></span> D001 สุวิทย์</span>
-            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-purple-100 text-purple-800 text-2xs font-medium"><span class="w-2 h-2 rounded-full bg-purple-600"></span> D002 จักรกฤษณ์</span>
-            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-teal-100 text-teal-800 text-2xs font-medium"><span class="w-2 h-2 rounded-full bg-teal-600"></span> D003 ศักดิ์ชัย</span>
-            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-100 text-amber-900 text-2xs font-medium"><span class="w-2 h-2 rounded-full bg-amber-600"></span> D004 ธนาวุฒิ</span>
+
+          <div class="flex items-center gap-2 flex-wrap">
+            <!-- View Mode Switcher: Desktop Grid vs Mobile Agenda -->
+            <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 shadow-2xs">
+              <button type="button" onclick="setCalViewMode('grid')" id="cal-mode-grid" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow-xs flex items-center gap-1">
+                <i class="fa-solid fa-table-cells"></i> <span class="hidden sm:inline">ตารางเดือน</span>
+              </button>
+              <button type="button" onclick="setCalViewMode('agenda')" id="cal-mode-agenda" class="px-2.5 py-1 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-100 flex items-center gap-1">
+                <i class="fa-solid fa-calendar-day text-emerald-600"></i> <span>โหมดมือถือ (Agenda)</span>
+              </button>
+            </div>
+
+            <div class="hidden md:flex items-center gap-1.5">
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-blue-100 text-blue-800 text-2xs font-medium"><span class="w-2 h-2 rounded-full bg-blue-600"></span> D001 สุวิทย์</span>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-purple-100 text-purple-800 text-2xs font-medium"><span class="w-2 h-2 rounded-full bg-purple-600"></span> D002 จักรกฤษณ์</span>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-teal-100 text-teal-800 text-2xs font-medium"><span class="w-2 h-2 rounded-full bg-teal-600"></span> D003 ศักดิ์ชัย</span>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-100 text-amber-900 text-2xs font-medium"><span class="w-2 h-2 rounded-full bg-amber-600"></span> D004 ธนาวุฒิ</span>
+            </div>
           </div>
         </div>
 
-        <!-- MONTHLY SHIFT SCHEDULE STRIP (การ์ดรอบเวรประจำเดือน - ถอดเวรออกจากปฏิทินมาอยู่ด้านบน) -->
+        <!-- MONTHLY SHIFT SCHEDULE STRIP -->
         <div class="space-y-2 pt-1 pb-1">
           <div class="flex items-center justify-between text-xs text-slate-700">
             <span class="font-bold flex items-center gap-1.5 text-slate-900">
@@ -261,8 +274,8 @@
           </div>
         </div>
 
-        <!-- 7-DAY CALENDAR GRID -->
-        <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-xs">
+        <!-- 7-DAY CALENDAR GRID (DESKTOP / FULL VIEW) -->
+        <div id="calendar-grid-wrapper" class="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-xs">
           <div class="min-w-[720px]">
             
             <!-- Day of Week Headers -->
@@ -278,9 +291,29 @@
 
             <!-- Calendar Days Cells Grid -->
             <div id="calendar-days-grid" class="grid grid-cols-7 divide-x divide-y divide-slate-200">
-              <!-- Dynamically populated 35-42 day cells -->
+              <!-- Dynamically populated -->
             </div>
+          </div>
+        </div>
 
+        <!-- MOBILE WEEKLY AGENDA & TIMELINE VIEW (100% RESPONSIVE - ZERO SCROLLING) -->
+        <div id="calendar-agenda-wrapper" class="hidden space-y-4">
+          <!-- Weekday Strip Pills -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-slate-900 flex items-center gap-1.5">
+                <i class="fa-solid fa-calendar-week text-emerald-600"></i> เลือกวันเพื่อดูภารกิจ:
+              </span>
+              <span id="agenda-week-label" class="text-2xs text-slate-500 font-mono"></span>
+            </div>
+            <div id="agenda-week-strip" class="grid grid-cols-7 gap-1 sm:gap-1.5 text-center">
+              <!-- Dynamically rendered 7-day strip -->
+            </div>
+          </div>
+
+          <!-- Agenda Card Details for Selected Date -->
+          <div id="agenda-day-details" class="space-y-2.5">
+            <!-- Dynamically rendered agenda items -->
           </div>
         </div>
 
@@ -407,6 +440,7 @@
           </div>
 
           <form id="usage-log-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+            <input type="hidden" id="form-target-row" value="">
             
             <!-- ROW 1: DOC INFO & REQUESTER -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
@@ -425,7 +459,6 @@
                 <div class="flex items-center justify-between">
                   <label class="text-xs font-semibold text-slate-700">ชื่อผู้ขอใช้รถ *</label>
                   <div class="flex gap-1 overflow-x-auto pb-0.5">
-                    <span class="text-2xs text-slate-500 self-center mr-0.5">จุดฮิต:</span>
                     <button type="button" onclick="appendRequesterPrefix('อ.')" class="chip-btn px-2 py-0.5 text-xs rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 font-medium">อ.</button>
                     <button type="button" onclick="appendRequesterPrefix('ผศ.')" class="chip-btn px-2 py-0.5 text-xs rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 font-medium">ผศ.</button>
                     <button type="button" onclick="appendRequesterPrefix('รศ.')" class="chip-btn px-2 py-0.5 text-xs rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 font-medium">รศ.</button>
@@ -453,7 +486,6 @@
                 <div class="flex items-center justify-between">
                   <label class="text-xs font-semibold text-slate-700">ขออนุญาตใช้รถราชการเพื่อ *</label>
                   <div class="flex gap-1 overflow-x-auto pb-0.5">
-                    <span class="text-2xs text-slate-500 self-center mr-0.5">จุดฮิต:</span>
                     <button type="button" onclick="setObjectivePreset('นิเทศ')" class="chip-btn px-2 py-0.5 text-xs rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 font-medium">นิเทศ</button>
                     <button type="button" onclick="setObjectivePreset('ประชุม')" class="chip-btn px-2 py-0.5 text-xs rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 font-medium">ประชุม</button>
                     <button type="button" onclick="setObjectivePreset('อบรม')" class="chip-btn px-2 py-0.5 text-xs rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 font-medium">อบรม</button>
@@ -467,7 +499,6 @@
                 <div class="flex items-center justify-between">
                   <label class="text-xs font-semibold text-slate-700">ต้นทาง *</label>
                   <div class="flex gap-1 overflow-x-auto pb-0.5">
-                    <span class="text-2xs text-slate-500 self-center mr-0.5">จุดฮิต:</span>
                     <button type="button" onclick="setOriginPreset('วิทยาเขต สปร.')" class="chip-btn px-2 py-0.5 text-xs rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 font-medium">วิทยาเขต สปร.</button>
                     <button type="button" onclick="setOriginPreset('วิทยาเขต นว.')" class="chip-btn px-2 py-0.5 text-xs rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 font-medium">วิทยาเขต นว.</button>
                   </div>
@@ -480,7 +511,6 @@
                 <div class="flex items-center justify-between">
                   <label class="text-xs font-semibold text-slate-700">สถานที่ปลายทาง *</label>
                   <div class="flex gap-1 overflow-x-auto pb-0.5">
-                    <span class="text-2xs text-slate-500 self-center mr-0.5">จุดฮิต:</span>
                     <button type="button" onclick="setDestPreset('วิทยาเขต นว.')" class="chip-btn px-2 py-0.5 text-xs rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 font-medium">วิทยาเขต นว.</button>
                     <button type="button" onclick="setDestPreset('รพ.สวรรค์ประชารักษ์')" class="chip-btn px-2 py-0.5 text-xs rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 font-medium">รพ.สปร.</button>
                     <button type="button" onclick="setDestPreset('สบช.')" class="chip-btn px-2 py-0.5 text-xs rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 font-medium">สบช.</button>
@@ -1131,6 +1161,9 @@
       currentFilter: 'all',
       tableDriverFilter: 'all',
       calendarLayer: 'all',
+      calViewMode: 'grid', // 'grid' | 'agenda'
+      agendaDate: '',
+      selectedDrivers: [],
       selectedStatsMonth: '',
       calYear: 2026,
       calMonth: 7, // 0-indexed (7 = August)
@@ -1377,7 +1410,8 @@
           btn.className = 'cal-layer-btn chip-btn px-3 py-1 rounded-xl text-xs font-medium transition shadow-2xs bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
         }
       });
-      renderGoogleCalendar();
+      if (APP_DATA.calViewMode === 'agenda') renderAgendaView();
+      else renderGoogleCalendar();
       renderModule3Calendar();
     }
 
@@ -1394,7 +1428,9 @@
       const now = new Date();
       const currentShift = findShiftForDate(now);
 
-      renderGoogleCalendar();
+      if (APP_DATA.calViewMode === 'agenda') renderAgendaView();
+      else renderGoogleCalendar();
+      
       renderUnifiedDriverCards(currentShift ? currentShift.Driver_ID : null);
       renderLogsTable();
     }
@@ -1408,14 +1444,234 @@
         APP_DATA.calMonth = 11;
         APP_DATA.calYear--;
       }
-      renderGoogleCalendar();
+      if (APP_DATA.calViewMode === 'agenda') renderAgendaView();
+      else renderGoogleCalendar();
     }
 
     function jumpCalToToday() {
       const now = new Date();
       APP_DATA.calYear = now.getFullYear();
       APP_DATA.calMonth = now.getMonth();
-      renderGoogleCalendar();
+      APP_DATA.agendaDate = formatDate(now);
+      if (APP_DATA.calViewMode === 'agenda') renderAgendaView();
+      else renderGoogleCalendar();
+    }
+
+    // ==========================================
+    // CALENDAR VIEW MODES & MOBILE WEEKLY AGENDA
+    // ==========================================
+    function setCalViewMode(mode) {
+      APP_DATA.calViewMode = mode;
+      
+      const gridBtn = document.getElementById('cal-mode-grid');
+      const agendaBtn = document.getElementById('cal-mode-agenda');
+      const gridWrapper = document.getElementById('calendar-grid-wrapper');
+      const agendaWrapper = document.getElementById('calendar-agenda-wrapper');
+
+      if (mode === 'agenda') {
+        if (gridBtn) gridBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-100 flex items-center gap-1';
+        if (agendaBtn) agendaBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow-xs flex items-center gap-1';
+        if (gridWrapper) gridWrapper.classList.add('hidden');
+        if (agendaWrapper) agendaWrapper.classList.remove('hidden');
+        renderAgendaView();
+      } else {
+        if (gridBtn) gridBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow-xs flex items-center gap-1';
+        if (agendaBtn) agendaBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-100 flex items-center gap-1';
+        if (gridWrapper) gridWrapper.classList.remove('hidden');
+        if (agendaWrapper) agendaWrapper.classList.add('hidden');
+        renderGoogleCalendar();
+      }
+    }
+
+    function renderAgendaView() {
+      const stripContainer = document.getElementById('agenda-week-strip');
+      const label = document.getElementById('agenda-week-label');
+      if (!stripContainer) return;
+
+      const now = new Date();
+      if (!APP_DATA.agendaDate) {
+        APP_DATA.agendaDate = formatDate(now);
+      }
+
+      const activeDate = parseDate(APP_DATA.agendaDate) || now;
+
+      // Find Start of the week for this active date (Saturday-based)
+      const dayOfWeek = activeDate.getDay(); // 0: Sun, 6: Sat
+      const diffToSaturday = (dayOfWeek + 1) % 7; 
+      const satDate = new Date(activeDate);
+      satDate.setDate(satDate.getDate() - diffToSaturday);
+
+      const dayNames = ['เสาร์', 'อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสฯ', 'ศุกร์'];
+      let stripHtml = '';
+
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(satDate);
+        d.setDate(satDate.getDate() + i);
+        const dStr = formatDate(d);
+        const isSelected = dStr === APP_DATA.agendaDate;
+        const isToday = dStr === formatDate(now);
+
+        const shift = findShiftForDate(d);
+        const dColor = (shift && DRIVER_COLORS[shift.Driver_ID]) ? DRIVER_COLORS[shift.Driver_ID] : null;
+
+        const dZero = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+        const tripsCount = (APP_DATA.usageLogs || []).filter(l => {
+          const s = parseDate(l.Start_Datetime);
+          const e = parseDate(l.End_Datetime);
+          if (!s || !e) return false;
+          const sZero = new Date(s.getFullYear(), s.getMonth(), s.getDate()).getTime();
+          const eZero = new Date(e.getFullYear(), e.getMonth(), e.getDate()).getTime();
+          return dZero >= sZero && dZero <= eZero;
+        }).length;
+
+        const leavesCount = getLeavesForDate(d).length;
+
+        let activeClass = isSelected
+          ? 'bg-emerald-600 text-white ring-2 ring-emerald-400 shadow-md font-bold'
+          : 'bg-white text-slate-800 hover:bg-slate-50 border border-slate-200';
+
+        if (isToday && !isSelected) {
+          activeClass = 'bg-emerald-50 text-emerald-800 border-2 border-emerald-500 font-bold';
+        }
+
+        stripHtml += `
+          <button type="button" onclick="selectAgendaDay('${dStr}')" class="p-2 rounded-xl transition flex flex-col items-center justify-between ${activeClass}">
+            <span class="text-[10px] opacity-75">${dayNames[i]}</span>
+            <strong class="text-sm font-black my-0.5">${d.getDate()}</strong>
+            <div class="flex items-center gap-0.5 min-h-[6px]">
+              ${tripsCount > 0 ? `<span class="w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-white' : 'bg-emerald-500'}"></span>` : ''}
+              ${leavesCount > 0 ? `<span class="w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-rose-200' : 'bg-rose-500'}"></span>` : ''}
+              ${dColor && !isSelected ? `<span class="w-1.5 h-1.5 rounded-full ${dColor.dot}"></span>` : ''}
+            </div>
+          </button>
+        `;
+      }
+
+      stripContainer.innerHTML = stripHtml;
+      if (label) label.textContent = `${satDate.getDate()} - ${new Date(satDate.getTime() + 6*86400000).getDate()} ${formatYearMonthThai(`${activeDate.getFullYear()}-${String(activeDate.getMonth() + 1).padStart(2, '0')}`)}`;
+
+      renderAgendaDayDetails(activeDate);
+    }
+
+    function selectAgendaDay(dateStr) {
+      APP_DATA.agendaDate = dateStr;
+      renderAgendaView();
+    }
+
+    function renderAgendaDayDetails(cellDate) {
+      const container = document.getElementById('agenda-day-details');
+      if (!container) return;
+
+      const dateStr = formatDate(cellDate);
+      const shift = findShiftForDate(cellDate);
+      const shiftColor = shift ? DRIVER_COLORS[shift.Driver_ID] : null;
+      const photo = shift ? DRIVER_PHOTOS[shift.Driver_ID] : '';
+
+      const dZero = new Date(cellDate.getFullYear(), cellDate.getMonth(), cellDate.getDate()).getTime();
+      const activeTrips = (APP_DATA.usageLogs || []).filter(l => {
+        const s = parseDate(l.Start_Datetime);
+        const e = parseDate(l.End_Datetime);
+        if (!s || !e) return false;
+        const sZero = new Date(s.getFullYear(), s.getMonth(), s.getDate()).getTime();
+        const eZero = new Date(e.getFullYear(), e.getMonth(), e.getDate()).getTime();
+        return dZero >= sZero && dZero <= eZero;
+      });
+
+      const dayLeaves = getLeavesForDate(cellDate);
+
+      let contentHtml = `
+        <div class="p-3 rounded-xl bg-slate-900 text-white flex items-center justify-between shadow-sm">
+          <div class="flex items-center gap-2">
+            <span class="text-base font-extrabold flex items-center gap-1.5">
+              <i class="fa-regular fa-calendar-check text-emerald-400"></i> ${formatDateShort(cellDate)}
+            </span>
+          </div>
+          <div class="text-xs opacity-80 font-mono">
+            ${activeTrips.length} ภารกิจ • ${dayLeaves.length} การลา
+          </div>
+        </div>
+
+        <div class="p-3 rounded-xl ${shiftColor ? shiftColor.bgLight : 'bg-slate-50'} border ${shiftColor ? shiftColor.border : 'border-slate-200'} flex items-center justify-between shadow-2xs">
+          <div class="flex items-center gap-3">
+            <img src="${photo}" alt="" class="w-10 h-10 rounded-xl object-cover ring-2 ${shiftColor ? shiftColor.ring : 'ring-slate-300'} border border-white bg-white">
+            <div>
+              <span class="text-2xs font-semibold text-slate-500 block">พขร. เวรหลักสัปดาห์นี้</span>
+              <h4 class="text-xs sm:text-sm font-bold text-slate-900">${shift ? shift.Driver_Name : '- ว่างเวร -'}</h4>
+            </div>
+          </div>
+          <span class="text-xs font-bold px-2.5 py-1 rounded-lg ${shiftColor ? shiftColor.badge : 'bg-slate-100 text-slate-600'}">
+            ${shift ? shift.Driver_ID : 'ไม่มีเวร'}
+          </span>
+        </div>
+      `;
+
+      if (dayLeaves.length > 0) {
+        contentHtml += `
+          <div class="space-y-1.5">
+            <h5 class="text-xs font-bold text-rose-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-bed text-rose-600"></i> กิจกรรมการลา (${dayLeaves.length} คน)
+            </h5>
+            ${dayLeaves.map(lv => `
+              <div class="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-xs flex items-center justify-between">
+                <div>
+                  <strong class="text-rose-900">${lv.Driver_Name}</strong>
+                  <span class="text-2xs text-rose-700 ml-1">(${lv.Leave_Type})</span>
+                  ${lv.Reason ? `<p class="text-2xs text-rose-600 mt-0.5">เหตุผล: ${lv.Reason}</p>` : ''}
+                </div>
+                <span class="text-2xs font-mono text-rose-800 font-bold bg-white px-2 py-0.5 rounded border border-rose-200">${formatDateShort(lv.Start_Date)} - ${formatDateShort(lv.End_Date)}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      contentHtml += `
+        <div class="space-y-2">
+          <h5 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+            <i class="fa-solid fa-car-side text-emerald-600"></i> รายการภารกิจใช้รถ (${activeTrips.length} งาน)
+          </h5>
+          ${activeTrips.length === 0 ? `
+            <div class="p-6 rounded-xl bg-slate-50 border border-slate-200 text-center text-xs text-slate-500">
+              <i class="fa-regular fa-calendar-xmark text-xl text-slate-400 mb-1 block"></i>
+              ไม่มีภารกิจการใช้รถในวันนี้
+            </div>
+          ` : `
+            <div class="space-y-2">
+              ${activeTrips.map(trip => {
+                const s = parseDate(trip.Start_Datetime);
+                const e = parseDate(trip.End_Datetime);
+                const isOff = trip.Work_Type && (trip.Work_Type.includes('นอก') || trip.Work_Type.includes('เสริม'));
+                const actName = (trip.Actual_Driver || '').replace(/^นาย\s*/, '').trim();
+                const dObj = APP_DATA.drivers.find(d => d.name.includes(actName.split(' ')[0]) || actName.includes(d.name.split(' ')[0]));
+                const dColor = (dObj && DRIVER_COLORS[dObj.id]) ? DRIVER_COLORS[dObj.id] : null;
+
+                return `
+                  <div class="p-3 rounded-xl bg-white border border-slate-200 shadow-2xs space-y-2 border-l-4 ${dColor ? dColor.cardBorderTop.replace('border-t-4 border-t-', 'border-l-') : 'border-l-slate-300'}">
+                    <div class="flex items-center justify-between text-xs">
+                      <div class="font-bold text-slate-900 flex items-center gap-1.5">
+                        <i class="fa-solid fa-location-dot text-rose-600"></i>
+                        <span>${trip.Location_End}</span>
+                        <span class="text-2xs text-slate-500 font-normal">(${trip.Objective})</span>
+                      </div>
+                      <span class="text-2xs font-bold px-2 py-0.5 rounded-full ${isOff ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-emerald-100 text-emerald-800 border border-emerald-300'}">
+                        ${isOff ? 'นอกเวร' : 'ในเวร'}
+                      </span>
+                    </div>
+
+                    <div class="text-2xs text-slate-600 space-y-0.5">
+                      <div><i class="fa-solid fa-clock text-slate-400 mr-1"></i> เวลา: <span class="font-mono font-semibold">${s ? formatTime(s) : ''} - ${e ? formatTime(e) : ''} น.</span></div>
+                      <div><i class="fa-solid fa-user text-slate-400 mr-1"></i> ผู้ขอ: <span class="font-medium">${trip.Requester_Name}</span> ${trip.Position ? `(${trip.Position})` : ''}</div>
+                      <div><i class="fa-solid fa-id-badge text-slate-400 mr-1"></i> พขร.: <strong class="text-slate-900">${trip.Actual_Driver}</strong></div>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          `}
+        </div>
+      `;
+
+      container.innerHTML = contentHtml;
     }
 
     function renderShiftCardsStrip(containerId, targetYear, targetMonth) {
@@ -1425,7 +1681,6 @@
       const now = new Date();
       const todayZero = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0, 0).getTime();
 
-      // Filter shifts for the specified month
       let shifts = APP_DATA.shiftMaster.filter(s => {
         const sD = parseDate(s.Start_Date);
         const eD = parseDate(s.End_Date);
@@ -1500,22 +1755,18 @@
       const thaiMonthsFull = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
       title.textContent = `${thaiMonthsFull[month]} ${year + 543}`;
 
-      // Render Shift Schedule Strip on top of calendar
       renderShiftCardsStrip('calendar-shift-strip', year, month);
 
-      // Calculate days
       const firstDayOfMonth = new Date(year, month, 1);
       const lastDayOfMonth = new Date(year, month + 1, 0);
       const numDaysInMonth = lastDayOfMonth.getDate();
-      const startDayOfWeek = firstDayOfMonth.getDay(); // 0 = Sunday
+      const startDayOfWeek = firstDayOfMonth.getDay(); 
 
       const now = new Date();
       const todayStr = formatDate(now);
       const todayZero = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
 
       let cellsHtml = '';
-
-      // 1. Padding days from previous month
       const prevMonthLastDay = new Date(year, month, 0).getDate();
       for (let i = startDayOfWeek - 1; i >= 0; i--) {
         const pDay = prevMonthLastDay - i;
@@ -1523,14 +1774,12 @@
         cellsHtml += renderCalendarCell(cellDate, false, false, true, pDay, formatDate(cellDate));
       }
 
-      // 2. Current month days
       for (let day = 1; day <= numDaysInMonth; day++) {
         const cellDate = new Date(year, month, day);
         const dateStr = formatDate(cellDate);
         cellsHtml += renderCalendarCell(cellDate, true, dateStr === todayStr, new Date(year, month, day).getTime() < todayZero, day, dateStr);
       }
 
-      // 3. Padding days for next month
       const totalCellsSoFar = startDayOfWeek + numDaysInMonth;
       const totalGridCells = totalCellsSoFar <= 35 ? 35 : 42;
       const nextMonthDays = totalGridCells - totalCellsSoFar;
@@ -1611,14 +1860,10 @@
         `;
       }
 
-      // Find shift for this date
       const shift = findShiftForDate(cellDate);
       const shiftColor = (shift && showShifts) ? DRIVER_COLORS[shift.Driver_ID] : null;
-
-      // Check leaves for this date
       const dayLeaves = showLeaves ? getLeavesForDate(cellDate) : [];
 
-      // Cell Background & Number Styling
       let cellBg = '';
       let dayNumberClass = '';
 
@@ -1682,12 +1927,11 @@
       const title = document.getElementById('day-modal-title');
       const body = document.getElementById('day-modal-body');
 
-      title.innerHTML = `<i class="fa-regular fa-calendar-check text-emerald-600"></i> รายละเอียดวันที่ ${formatDateShort(dt)}`;
+      title.innerHTML = `<i class="fa-regular fa-calendar-check text-emerald-600"></i> รายการวันที่ ${formatDateShort(dt)}`;
 
       const shift = findShiftForDate(dt);
       const targetZero = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime();
 
-      // Find all active trips on this day
       const trips = [];
       APP_DATA.usageLogs.forEach(l => {
         const sD = parseDate(l.Start_Datetime);
@@ -1707,19 +1951,13 @@
         }
       });
 
-      // Find all leaves on this day
       const dayLeaves = getLeavesForDate(dt);
 
-      let html = '';
-
-      // 1. TOP: Trips Section (ภารกิจปฏิบัติงานในวันนี้)
-      html += `
-        <div class="space-y-2.5">
+      let html = `<div class="space-y-2.5">
           <h4 class="text-xs font-bold text-slate-800 flex items-center justify-between pb-1 border-b border-slate-200">
             <span class="flex items-center gap-1.5"><i class="fa-solid fa-route text-emerald-600"></i> ภารกิจปฏิบัติงานในวันนี้</span>
             <span class="text-2xs font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">${trips.length} ภารกิจ</span>
-          </h4>
-      `;
+          </h4>`;
 
       if (trips.length === 0) {
         html += `<div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-center text-xs text-slate-500 italic">ไม่มีรายการขอใช้รถในวันนี้</div>`;
@@ -1728,72 +1966,21 @@
           const t = item.log;
           const s = parseDate(t.Start_Datetime);
           const e = parseDate(t.End_Datetime);
-          const actName = (t.Actual_Driver || '').replace(/^นาย\s*/, '').trim();
-          const dObj = APP_DATA.drivers.find(d => d.name.includes(actName.split(' ')[0]) || actName.includes(d.name.split(' ')[0]));
-          const dPhoto = dObj ? dObj.photo : '';
-          const dColor = (dObj && DRIVER_COLORS[dObj.id]) ? DRIVER_COLORS[dObj.id] : {
-            badge: 'bg-slate-100 text-slate-800 border-slate-300',
-            ring: 'ring-slate-300',
-            dot: 'bg-slate-600'
-          };
-
-          const isOffShift = t.Work_Type && (t.Work_Type.includes('นอก') || t.Work_Type.includes('เสริม'));
-          const workTypeBadge = isOffShift
-            ? `<span class="px-2 py-0.5 rounded-full text-2xs font-bold bg-amber-100 text-amber-900 border border-amber-300"><i class="fa-solid fa-bell mr-0.5"></i> ปฏิบัติงานนอกเหนือตารางเวร</span>`
-            : `<span class="px-2 py-0.5 rounded-full text-2xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300"><i class="fa-solid fa-check mr-0.5"></i> งานในเวร</span>`;
-
-          let tripStatusTag = '';
-          if (item.isStay) {
-            tripStatusTag = '<span class="text-2xs font-bold bg-purple-100 text-purple-800 px-2 py-0.5 rounded">⏳ พักค้างรอวันกลับ</span>';
-          } else if (item.isStart && formatDate(s) !== formatDate(e)) {
-            tripStatusTag = '<span class="text-2xs font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded">🛫 วันออกเดินทาง</span>';
-          } else if (item.isEnd && formatDate(s) !== formatDate(e)) {
-            tripStatusTag = '<span class="text-2xs font-bold bg-orange-100 text-orange-800 px-2 py-0.5 rounded">🛬 วันเดินทางกลับ</span>';
-          }
+          const dObj = APP_DATA.drivers.find(d => (t.Actual_Driver || '').includes(d.name.split(' ')[0]));
+          const dColor = (dObj && DRIVER_COLORS[dObj.id]) ? DRIVER_COLORS[dObj.id] : {badge: 'bg-slate-100', ring: 'ring-slate-300'};
 
           return `
-            <div class="p-3.5 rounded-2xl bg-white border border-slate-200 space-y-2.5 shadow-sm hover:shadow-md transition">
-              <!-- Driver Prominent Header -->
-              <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-                <div class="flex items-center gap-2.5">
-                  <img src="${dPhoto}" alt="${t.Actual_Driver}" class="w-11 h-11 rounded-xl object-cover ring-2 ${dColor.ring} border border-white bg-slate-100 shadow-2xs shrink-0">
-                  <div>
-                    <span class="text-2xs text-slate-500 font-medium block">พขร. ปฏิบัติงานจริง</span>
-                    <h4 class="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-1.5">
-                      <span>${t.Actual_Driver || '-'}</span>
-                      <span class="text-2xs font-mono font-bold ${dColor.badge} px-1.5 py-0.2 rounded">${dObj?.id || ''}</span>
-                    </h4>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <span class="text-teal-700 font-mono font-bold bg-teal-50 px-2.5 py-1 rounded-lg border border-teal-200 text-xs shadow-2xs">${s ? formatTime(s) : ''} - ${e ? formatTime(e) : ''}</span>
-                </div>
+            <div class="p-3 rounded-xl border border-slate-200 shadow-sm transition space-y-2">
+              <div class="flex items-center justify-between text-xs font-bold">
+                <span class="flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full ${dColor.dot || 'bg-slate-600'}"></span>
+                  ${t.Actual_Driver}
+                </span>
+                <span class="text-teal-700 font-mono bg-teal-50 px-2 py-0.5 rounded">${s ? formatTime(s) : ''} - ${e ? formatTime(e) : ''}</span>
               </div>
-
-              <!-- Destination & Objective Prominent -->
-              <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/80 space-y-1">
-                <div class="flex items-center gap-1.5 text-xs sm:text-sm font-black text-slate-900">
-                  <i class="fa-solid fa-location-dot text-rose-600 text-sm"></i>
-                  <span>${t.Location_End || '-'}</span>
-                  ${tripStatusTag}
-                </div>
-                <p class="text-xs text-slate-700 pl-4">
-                  <span class="text-slate-500 font-medium">เพื่อ:</span> ${t.Objective || '-'}
-                </p>
-                <div class="text-2xs text-slate-500 flex items-center gap-2 pl-4 pt-0.5">
-                  <span>ต้นทาง: ${t.Location_Start || 'วิทยาเขต สปร.'}</span>
-                  <span>•</span>
-                  <span>ลักษณะ: ${t.Trip_Type || '2. ไป-กลับภายในวันเดียว'}</span>
-                </div>
-              </div>
-
-              <!-- Requester & Work Type -->
-              <div class="flex items-center justify-between text-2xs pt-1 text-slate-600">
-                <div class="flex items-center gap-1 truncate">
-                  <i class="fa-solid fa-user text-slate-400"></i>
-                  <span>ผู้ขอ: <strong>${t.Requester_Name}</strong> ${t.Position ? `(${t.Position})` : ''}</span>
-                </div>
-                <div>${workTypeBadge}</div>
+              <div class="pl-3.5 text-xs text-slate-700">
+                <p class="font-bold text-slate-900">${t.Location_End}</p>
+                <p class="text-slate-500">วัตถุประสงค์: ${t.Objective}</p>
               </div>
             </div>
           `;
@@ -1801,45 +1988,15 @@
       }
 
       html += `</div>`;
-
-      // 2. MIDDLE: Leave Section (if any on this day)
       if (dayLeaves.length > 0) {
-        html += `
-          <div class="space-y-2 pt-2 border-t border-slate-200">
-            <h4 class="text-xs font-bold text-rose-800 flex items-center gap-1.5">
-              <i class="fa-solid fa-bed text-rose-600"></i> กิจกรรมการลาในวันนี้ (${dayLeaves.length} ท่าน)
-            </h4>
-            <div class="space-y-1.5">
-              ${dayLeaves.map(lv => `
-                <div class="p-2.5 rounded-xl bg-rose-50/80 border border-rose-200 text-xs flex items-center justify-between">
-                  <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-rose-500"></span>
-                    <strong class="text-rose-950">${lv.Driver_Name}</strong>
-                    <span class="px-1.5 py-0.2 rounded bg-rose-200 text-rose-900 text-2xs font-bold">${lv.Leave_Type}</span>
-                  </div>
-                  <span class="text-2xs text-slate-500">${formatDateShort(lv.Start_Date)} - ${formatDateShort(lv.End_Date)}</span>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        `;
-      }
-
-      // 3. BOTTOM: Shift Driver Section (แถบ Compact Bar ด้านล่างสุด)
-      if (shift) {
-        const photo = DRIVER_PHOTOS[shift.Driver_ID] || '';
-        const c = DRIVER_COLORS[shift.Driver_ID] || { badge: 'bg-emerald-50 text-emerald-900 border-emerald-300', dot: 'bg-emerald-600', ring: 'ring-emerald-300' };
-        const monthWeekNo = getMonthWeekNumber(shift);
-
-        html += `
-          <div class="mt-3 p-2.5 rounded-xl ${c.bgLight || 'bg-slate-50'} border ${c.border || 'border-slate-300'} flex items-center justify-between text-xs shadow-2xs">
-            <div class="flex items-center gap-2">
-              <img src="${photo}" alt="${shift.Driver_Name}" class="w-7 h-7 rounded-lg object-cover ring-1 ${c.ring} border border-white bg-slate-100 shrink-0">
-              <span class="text-slate-700">เจ้าของเวรประจำสัปดาห์ (สัปดาห์ที่ ${monthWeekNo}): <strong class="text-slate-900">${shift.Driver_Name}</strong> <span class="font-mono opacity-75">(${shift.Driver_ID})</span></span>
-            </div>
-            <span class="text-2xs text-slate-500 font-medium">รอบ: ${formatDateShort(shift.Start_Date)} - ${formatDateShort(shift.End_Date)}</span>
-          </div>
-        `;
+        html += `<div class="space-y-2 pt-2 border-t border-slate-200">
+          <h4 class="text-xs font-bold text-rose-800 flex items-center gap-1.5">
+            <i class="fa-solid fa-bed text-rose-600"></i> กิจกรรมการลา (${dayLeaves.length} ท่าน)
+          </h4>
+          ${dayLeaves.map(lv => `
+            <div class="p-2 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-900">${lv.Driver_Name} (${lv.Leave_Type})</div>
+          `).join('')}
+        </div>`;
       }
 
       body.innerHTML = html;
@@ -1848,6 +2005,20 @@
 
     function closeDayDetailsModal() {
       document.getElementById('modal-day-details').classList.add('hidden');
+    }
+
+    function getLeavesForDate(targetDate) {
+      if (!APP_DATA.leaveLogs || APP_DATA.leaveLogs.length === 0) return [];
+      const targetZero = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate()).getTime();
+
+      return APP_DATA.leaveLogs.filter(lv => {
+        const sD = parseDate(lv.Start_Date);
+        const eD = parseDate(lv.End_Date);
+        if (!sD || !eD) return false;
+        const sZero = new Date(sD.getFullYear(), sD.getMonth(), sD.getDate()).getTime();
+        const eZero = new Date(eD.getFullYear(), eD.getMonth(), eD.getDate()).getTime();
+        return targetZero >= sZero && targetZero <= eZero;
+      });
     }
 
     function getDriverActiveLeave(driverId, targetDate = new Date()) {
@@ -1865,20 +2036,6 @@
       });
     }
 
-    function getLeavesForDate(targetDate) {
-      if (!APP_DATA.leaveLogs || APP_DATA.leaveLogs.length === 0) return [];
-      const targetZero = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate()).getTime();
-
-      return APP_DATA.leaveLogs.filter(lv => {
-        const sD = parseDate(lv.Start_Date);
-        const eD = parseDate(lv.End_Date);
-        if (!sD || !eD) return false;
-        const sZero = new Date(sD.getFullYear(), sD.getMonth(), sD.getDate()).getTime();
-        const eZero = new Date(eD.getFullYear(), eD.getMonth(), eD.getDate()).getTime();
-        return targetZero >= sZero && targetZero <= eZero;
-      });
-    }
-
     function renderUnifiedDriverCards(shiftDriverId) {
       const container = document.getElementById('unified-driver-grid');
       if (!container) return;
@@ -1887,47 +2044,23 @@
       const busyMap = getCurrentlyBusyDrivers(now);
       const targetYm = APP_DATA.selectedStatsMonth || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 
-      // Determine Next In Queue
-      let nextQueueDriverId = null;
-      const shiftDriverObj = APP_DATA.drivers.find(d => d.id === shiftDriverId);
-      const shiftDriverActiveLeave = shiftDriverObj ? getDriverActiveLeave(shiftDriverId, now) : null;
-      
-      if (shiftDriverObj && shiftDriverObj.status !== 'ลา' && !shiftDriverActiveLeave && !busyMap[shiftDriverId]) {
-        nextQueueDriverId = shiftDriverId;
-      } else {
-        const candidates = APP_DATA.drivers.filter(d => d.status !== 'ลา' && !getDriverActiveLeave(d.id, now) && !busyMap[d.id]);
-        if (candidates.length > 0) {
-          candidates.sort((a, b) => getDriverCoverTripsCount(a.id, targetYm) - getDriverCoverTripsCount(b.id, targetYm));
-          nextQueueDriverId = candidates[0].id;
-        }
-      }
-
       container.innerHTML = APP_DATA.drivers.map(driver => {
         const isShift = driver.id === shiftDriverId;
         const isBusy = !!busyMap[driver.id];
         const activeLeave = getDriverActiveLeave(driver.id, now);
         const isLeave = !!activeLeave || driver.status === 'ลา';
-        const isNextQueue = driver.id === nextQueueDriverId;
 
-        // Custom Driver Persona Palette
         const palette = DRIVER_COLORS[driver.id] || {
           cardBorderTop: 'border-t-4 border-t-slate-400',
           ring: 'ring-slate-300',
           badge: 'bg-slate-100 text-slate-800 border-slate-300',
+          solidBg: 'bg-slate-800 text-white',
           dot: 'bg-slate-500'
         };
 
-        // Live Monthly Stats for selected month directly from recorded logs
         const stats = calculateDriverMonthlyStats(driver.id, driver.name, targetYm);
-        const total = stats.total;
-        const onShift = stats.onShift;
-        const cover = stats.cover;
-        const rate = stats.rate;
-
-        // 2 Latest Missions for this Driver (Past / Ongoing)
         const latestMissions = getDriverLatestTwoMissions(driver.name);
 
-        // Status Badge
         let statusBadge = '';
         if (isLeave) {
           statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200 shadow-2xs"><span class="w-2 h-2 rounded-full bg-rose-500"></span> ลา (${activeLeave ? activeLeave.Leave_Type : 'ลา'})</span>`;
@@ -1938,21 +2071,15 @@
           statusBadge = '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-300 shadow-2xs"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> พร้อมปฏิบัติงาน</span>';
         }
 
-        // Top Queue/Shift Badge
-        let topTag = '';
-        if (isShift) {
-          topTag = '<span class="text-xs bg-emerald-600 text-white px-2.5 py-0.5 rounded-full font-bold shadow-xs flex items-center gap-1"><i class="fa-solid fa-star text-[10px]"></i> เวรหลักสัปดาห์นี้</span>';
-        } else if (isNextQueue) {
-          topTag = '<span class="text-xs bg-sky-100 text-sky-800 px-2.5 py-0.5 rounded-full font-bold border border-sky-300 pulse-glow flex items-center gap-1"><i class="fa-solid fa-arrow-right text-[10px]"></i> คิวถัดไป</span>';
-        } else {
-          topTag = `<span class="text-xs px-2.5 py-0.5 rounded-full font-bold ${palette.badge}">รหัส ${driver.id}</span>`;
-        }
+        let topTag = isShift 
+          ? '<span class="text-xs bg-emerald-600 text-white px-2.5 py-0.5 rounded-full font-bold shadow-xs flex items-center gap-1"><i class="fa-solid fa-star text-[10px]"></i> เวรหลักสัปดาห์นี้</span>'
+          : `<span class="text-xs px-2.5 py-0.5 rounded-full font-bold ${palette.badge}">รหัส ${driver.id}</span>`;
 
         const imgClass = isLeave ? 'grayscale opacity-60' : '';
         const cardBgClass = isLeave ? 'bg-slate-50/80 border-slate-300' : 'bg-white';
 
         return `
-          <div onclick="openDriverMonthSummaryModal('${driver.id}')" class="clean-card rounded-2xl p-4 ${cardBgClass} ${palette.cardBorderTop} flex flex-col justify-between space-y-3.5 shadow-sm hover:shadow-lg hover:-translate-y-1 transition cursor-pointer group" title="คลิกเพื่อดูสรุปสถิติและประวัติการปฏิบัติงาน">
+          <div onclick="openDriverMonthSummaryModal('${driver.id}')" class="clean-card rounded-2xl p-4 ${cardBgClass} ${palette.cardBorderTop} flex flex-col justify-between space-y-3 shadow-sm hover:shadow-lg hover:-translate-y-1 transition cursor-pointer group" title="คลิกเพื่อดูสรุปสถิติและประวัติการปฏิบัติงาน">
             
             <!-- Top Tag -->
             <div class="flex items-center justify-between min-h-[24px]">
@@ -1962,7 +2089,7 @@
 
             <!-- Profile Info -->
             <div class="flex items-center gap-3">
-              <img src="${driver.photo}" alt="${driver.name}" class="w-14 h-14 rounded-2xl object-cover ring-2 ${palette.ring} border-2 border-white bg-slate-100 shadow-sm shrink-0 ${imgClass}">
+              <img src="${driver.photo}" alt="${driver.name}" class="w-13 h-13 rounded-2xl object-cover ring-2 ${palette.ring} border-2 border-white bg-slate-100 shadow-sm shrink-0 ${imgClass}">
               <div class="overflow-hidden">
                 <h3 class="text-sm sm:text-base font-bold text-slate-900 truncate group-hover:text-emerald-700 transition">${driver.name}</h3>
                 <p class="text-xs text-slate-600 font-medium mt-0.5">โทร : <span class="font-bold text-slate-800">${driver.phone}</span></p>
@@ -1971,7 +2098,7 @@
             </div>
 
             <!-- Solid Persona Colored Box: 2 Latest Missions with Date on Bottom Line -->
-            <div class="${palette.solidBg || 'bg-slate-800 text-white'} p-3 rounded-xl shadow-xs space-y-2">
+            <div class="${palette.solidBg || 'bg-slate-800 text-white'} p-3 rounded-xl shadow-xs space-y-1.5">
               <div class="flex items-center justify-between text-2xs font-bold opacity-90 border-b border-white/20 pb-1">
                 <span class="flex items-center gap-1"><i class="fa-solid fa-clock-rotate-left"></i> ภารกิจล่าสุด</span>
                 <span class="text-[10px] opacity-80">${latestMissions.length > 0 ? latestMissions.length + ' งาน' : ''}</span>
@@ -1994,19 +2121,39 @@
               `}
             </div>
 
-            <!-- Stats for selected Month -->
+            <!-- Stats for selected Month: Trips Count & Rate -->
             <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/80 grid grid-cols-3 gap-1.5 text-center text-xs">
               <div>
                 <span class="text-slate-500 text-2xs block font-medium">รวมเดือนนี้</span>
-                <strong class="text-slate-900 text-sm font-bold">${total}</strong>
+                <strong class="text-slate-900 text-sm font-bold">${stats.total}</strong>
               </div>
               <div>
                 <span class="text-emerald-700 text-2xs block font-medium">ในเวร</span>
-                <strong class="text-emerald-700 text-sm font-bold">${onShift}</strong>
+                <strong class="text-emerald-700 text-sm font-bold">${stats.onShift}</strong>
               </div>
               <div>
-                <span class="text-amber-800 text-2xs block font-medium truncate" title="นอกตารางเวร (${rate})">นอกตารางเวร</span>
-                <strong class="text-amber-800 text-sm font-bold">${cover} <span class="text-[10px] font-normal text-slate-500">(${rate})</span></strong>
+                <span class="text-amber-800 text-2xs block font-medium truncate" title="นอกตารางเวร (${stats.rate})">นอกตารางเวร</span>
+                <strong class="text-amber-800 text-sm font-bold">${stats.cover} <span class="text-[10px] font-normal text-slate-500">(${stats.rate})</span></strong>
+              </div>
+            </div>
+
+            <!-- Mini 4-Trip Types Breakdown Bar -->
+            <div class="bg-slate-50/90 p-1.5 rounded-xl border border-slate-200/80 grid grid-cols-4 gap-1 text-center text-2xs">
+              <div class="bg-purple-50 text-purple-800 rounded-lg py-1 px-0.5 border border-purple-200/60" title="ไปส่งแล้วอยู่ค้างรอวันกลับ">
+                <span class="block text-[8px] font-semibold opacity-80">🟣 ค้าง</span>
+                <strong class="text-xs font-bold">${stats.t1 || 0}</strong>
+              </div>
+              <div class="bg-emerald-50 text-emerald-800 rounded-lg py-1 px-0.5 border border-emerald-200/60" title="ไป-กลับภายในวันเดียว">
+                <span class="block text-[8px] font-semibold opacity-80">🟢 วันเดียว</span>
+                <strong class="text-xs font-bold">${stats.t2 || 0}</strong>
+              </div>
+              <div class="bg-orange-50 text-orange-800 rounded-lg py-1 px-0.5 border border-orange-200/60" title="ไปส่งแล้วให้กลับ แล้วไปรับวันกลับ">
+                <span class="block text-[8px] font-semibold opacity-80">🟠 ส่ง-รับ</span>
+                <strong class="text-xs font-bold">${stats.t3 || 0}</strong>
+              </div>
+              <div class="bg-sky-50 text-sky-800 rounded-lg py-1 px-0.5 border border-sky-200/60" title="ไปส่งหรือรับเที่ยวเดียว">
+                <span class="block text-[8px] font-semibold opacity-80">🔵 เที่ยวเดียว</span>
+                <strong class="text-xs font-bold">${stats.t4 || 0}</strong>
               </div>
             </div>
 
@@ -2022,45 +2169,36 @@
     }
 
     function calculateDriverMonthlyStats(driverId, driverName, targetYm) {
-      let total = 0;
-      let onShift = 0;
-      let cover = 0;
-
+      let total = 0, onShift = 0, cover = 0, t1 = 0, t2 = 0, t3 = 0, t4 = 0;
       const dClean = (driverName || '').replace(/^นาย\s*/, '').trim();
 
       (APP_DATA.usageLogs || []).forEach(log => {
         const dt = parseDate(log.Start_Datetime);
         if (!dt) return;
         const logYm = `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}`;
-        if (logYm !== targetYm) return;
+        if (targetYm && logYm !== targetYm) return;
 
         const act = (log.Actual_Driver || '').replace(/^นาย\s*/, '').trim();
         if (act === dClean || act.includes(dClean.split(' ')[0])) {
           total++;
           const isOffShift = log.Work_Type && (log.Work_Type.includes('นอก') || log.Work_Type.includes('เสริม'));
-          if (isOffShift) {
-            cover++;
+          if (isOffShift) cover++; else onShift++;
+
+          const tType = (log.Trip_Type || '').trim();
+          if (tType.includes('1.') || tType.includes('ค้าง')) {
+            t1++;
+          } else if (tType.includes('3.') || tType.includes('ไปรับวันกลับ')) {
+            t3++;
+          } else if (tType.includes('4.') || tType.includes('เที่ยวเดียว')) {
+            t4++;
           } else {
-            onShift++;
+            t2++;
           }
         }
       });
 
       const rate = total > 0 ? `${Math.round((cover / total) * 100)}%` : '0%';
-
-      return {
-        total,
-        onShift,
-        cover,
-        rate
-      };
-    }
-
-    function getDriverCoverTripsCount(driverId, targetYm) {
-      const dObj = APP_DATA.drivers.find(d => d.id === driverId);
-      if (!dObj) return 0;
-      const stats = calculateDriverMonthlyStats(driverId, dObj.name, targetYm);
-      return stats.cover;
+      return { total, onShift, cover, rate, t1, t2, t3, t4 };
     }
 
     function getDriverLatestTwoMissions(driverName) {
@@ -2068,13 +2206,12 @@
       const dClean = driverName.replace(/^นาย\s*/, '').trim();
       const nowTime = new Date().getTime();
 
-      // Only missions that have already started / occurred up to now (past / current)
-      const matchedLogs = APP_DATA.usageLogs.filter(l => {
+      const matchedLogs = (APP_DATA.usageLogs || []).filter(l => {
         const act = (l.Actual_Driver || '').replace(/^นาย\s*/, '').trim();
         const isMatch = act === dClean || act.includes(dClean.split(' ')[0]);
         if (!isMatch) return false;
-        const dStart = parseDate(l.Start_Datetime);
-        return dStart && dStart.getTime() <= nowTime;
+        const s = parseDate(l.Start_Datetime);
+        return s && s.getTime() <= nowTime;
       });
 
       matchedLogs.sort((a, b) => {
@@ -2083,19 +2220,11 @@
         return db.getTime() - da.getTime();
       });
 
-      return matchedLogs.slice(0, 2).map(log => {
-        const dt = parseDate(log.Start_Datetime);
-        return {
-          date: dt ? formatDateShort(dt) : log.Start_Datetime,
-          destination: log.Location_End || '',
-          objective: log.Objective || ''
-        };
-      });
-    }
-
-    function getDriverLatestMission(driverName) {
-      const missions = getDriverLatestTwoMissions(driverName);
-      return missions.length > 0 ? missions[0] : { date: '', destination: '', objective: '' };
+      return matchedLogs.slice(0, 2).map(log => ({
+        destination: log.Location_End || '-',
+        objective: log.Objective || '-',
+        date: formatDateShort(parseDate(log.Start_Datetime))
+      }));
     }
 
     function openDriverMonthSummaryModal(driverId) {
@@ -2115,7 +2244,6 @@
       const stats = calculateDriverMonthlyStats(driver.id, driver.name, targetYm);
       const dClean = driver.name.replace(/^นาย\s*/, '').trim();
 
-      // Trips for this month
       const monthTrips = (APP_DATA.usageLogs || []).filter(l => {
         const dt = parseDate(l.Start_Datetime);
         if (!dt) return false;
@@ -2129,7 +2257,6 @@
         return db.getTime() - da.getTime();
       });
 
-      // Leaves for this driver
       const driverLeaves = (APP_DATA.leaveLogs || []).filter(lv => lv.Driver_ID === driver.id)
         .sort((a, b) => (parseDate(b.Start_Date) || 0) - (parseDate(a.Start_Date) || 0));
 
@@ -2186,6 +2313,32 @@
           </div>
         </div>
 
+        <!-- 4 Trip Types Distribution Box -->
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+          <div class="text-xs font-bold text-slate-800 flex items-center justify-between">
+            <span class="flex items-center gap-1.5"><i class="fa-solid fa-route text-emerald-600"></i> สรุปลักษณะการเดินทาง (4 รูปแบบ)</span>
+            <span class="text-2xs text-slate-500 font-normal">รวม ${stats.total} เที่ยว</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
+            <div class="p-2 rounded-lg bg-purple-50 border border-purple-200 text-purple-900">
+              <span class="block text-2xs font-semibold">🟣 ค้างรอวันกลับ</span>
+              <strong class="text-sm font-black">${stats.t1 || 0}</strong> <span class="text-[10px] opacity-75">เที่ยว</span>
+            </div>
+            <div class="p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-900">
+              <span class="block text-2xs font-semibold">🟢 ไป-กลับวันเดียว</span>
+              <strong class="text-sm font-black">${stats.t2 || 0}</strong> <span class="text-[10px] opacity-75">เที่ยว</span>
+            </div>
+            <div class="p-2 rounded-lg bg-orange-50 border border-orange-200 text-orange-900">
+              <span class="block text-2xs font-semibold">🟠 ส่ง-รับวันกลับ</span>
+              <strong class="text-sm font-black">${stats.t3 || 0}</strong> <span class="text-[10px] opacity-75">เที่ยว</span>
+            </div>
+            <div class="p-2 rounded-lg bg-sky-50 border border-sky-200 text-sky-900">
+              <span class="block text-2xs font-semibold">🔵 เที่ยวเดียว</span>
+              <strong class="text-sm font-black">${stats.t4 || 0}</strong> <span class="text-[10px] opacity-75">เที่ยว</span>
+            </div>
+          </div>
+        </div>
+
         <!-- Trip History for this Month -->
         <div class="space-y-2">
           <h4 class="text-xs font-bold text-slate-900 flex items-center justify-between border-b border-slate-200 pb-1.5">
@@ -2221,22 +2374,22 @@
           `}
         </div>
 
-        <!-- Leave History -->
-        <div class="space-y-2 pt-1 border-t border-slate-200">
+        <!-- Leave History for this Driver -->
+        <div class="space-y-2">
           <h4 class="text-xs font-bold text-slate-900 flex items-center justify-between border-b border-slate-200 pb-1.5">
             <span class="flex items-center gap-1.5"><i class="fa-solid fa-bed text-rose-600"></i> ประวัติการลาทั้งหมด (${driverLeaves.length} รายการ)</span>
           </h4>
           ${driverLeaves.length === 0 ? `
-            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center text-xs text-slate-500 italic">ไม่มีประวัติการลา</div>
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-center text-xs text-slate-500 italic">ไม่มีประวัติการลา</div>
           ` : `
             <div class="space-y-1.5 max-h-[160px] overflow-y-auto pr-1">
               ${driverLeaves.map(lv => `
-                <div class="p-2 rounded-xl bg-rose-50/60 border border-rose-200 text-xs flex items-center justify-between">
-                  <div class="flex items-center gap-2">
-                    <span class="px-2 py-0.5 rounded-full text-2xs font-bold bg-rose-200 text-rose-900">${lv.Leave_Type}</span>
-                    <span class="text-slate-800 font-medium">${lv.Reason || 'ไม่มีระบุเหตุผล'}</span>
+                <div class="p-2.5 rounded-xl bg-rose-50/60 border border-rose-200 text-xs flex items-center justify-between gap-2">
+                  <div>
+                    <strong class="text-rose-950 font-bold">${lv.Leave_Type || 'ลากิจ'}</strong>
+                    <span class="text-2xs text-rose-700 ml-1">${lv.Reason ? `(${lv.Reason})` : ''}</span>
                   </div>
-                  <span class="text-2xs font-mono text-slate-600 font-semibold">${formatDateShort(lv.Start_Date)} - ${formatDateShort(lv.End_Date)}</span>
+                  <span class="text-2xs font-mono text-rose-800 font-semibold bg-white px-2 py-0.5 rounded border border-rose-200">${formatDateShort(lv.Start_Date)} - ${formatDateShort(lv.End_Date)}</span>
                 </div>
               `).join('')}
             </div>
@@ -2254,301 +2407,20 @@
     function getCurrentlyBusyDrivers(nowDate) {
       const busy = {};
       const nowTime = nowDate.getTime();
-
       APP_DATA.usageLogs.forEach(log => {
         const s = parseDate(log.Start_Datetime);
         const e = parseDate(log.End_Datetime);
-        if (!s || !e) return;
-
-        if (nowTime >= s.getTime() && nowTime <= e.getTime()) {
-          const act = (log.Actual_Driver || '').trim();
-          const dObj = APP_DATA.drivers.find(d => d.name === act || act.includes(d.name.split(' ')[0]));
-          if (dObj) {
-            busy[dObj.id] = {
-              location: log.Location_End,
-              time: `${formatTime(s)} - ${formatTime(e)}`
-            };
-          }
+        if (s && e && nowTime >= s.getTime() && nowTime <= e.getTime()) {
+          const dObj = APP_DATA.drivers.find(d => (log.Actual_Driver || '').includes(d.name.split(' ')[0]));
+          if (dObj) busy[dObj.id] = { time: `${formatTime(s)} - ${formatTime(e)}` };
         }
       });
-
       return busy;
     }
 
-    function getDriverCoverTripsCount(driverId, targetYm) {
-      const sum = APP_DATA.monthlySummary.find(s => s.Driver_ID === driverId && s.Year_Month === targetYm);
-      return sum ? parseInt(sum.Cover_Trips || 0, 10) : 0;
-    }
-
-    // ==========================================
-    // LOGS TABLE: CHRONOLOGICAL ORDER (NOW -> FUTURE)
-    // ==========================================
     function renderLogsTable() {
       const tbody = document.getElementById('logs-table-body');
       if (!tbody) return;
-
-      const now = new Date();
-      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-      const currentYear = now.getFullYear();
-      const currentMonth = now.getMonth();
-
-      let filtered = [...APP_DATA.usageLogs];
-
-      // 1. Time Filter
-      if (APP_DATA.currentFilter === 'today') {
-        const todayStr = formatDate(now);
-        filtered = filtered.filter(l => {
-          const s = parseDate(l.Start_Datetime);
-          const e = parseDate(l.End_Datetime);
-          if (!s || !e) return false;
-          const sZero = new Date(s.getFullYear(), s.getMonth(), s.getDate()).getTime();
-          const eZero = new Date(e.getFullYear(), e.getMonth(), e.getDate()).getTime();
-          return todayStart >= sZero && todayStart <= eZero;
-        });
-      } else if (APP_DATA.currentFilter === 'week') {
-        const currentShift = findShiftForDate(now);
-        if (currentShift) {
-          const s = parseDate(currentShift.Start_Date);
-          const e = parseDate(currentShift.End_Date);
-          filtered = filtered.filter(l => {
-            const d = parseDate(l.Start_Datetime);
-            return d && d.getTime() >= s.getTime() && d.getTime() <= (e.getTime() + 86400000);
-          });
-        }
-      } else if (APP_DATA.currentFilter === 'month') {
-        filtered = filtered.filter(l => {
-          const d = parseDate(l.Start_Datetime);
-          return d && d.getFullYear() === currentYear && d.getMonth() === currentMonth;
-        });
-      } else if (APP_DATA.currentFilter === 'future') {
-        filtered = filtered.filter(l => {
-          const d = parseDate(l.Start_Datetime);
-          return d && d.getTime() >= todayStart;
-        });
-      }
-
-      // 2. Driver Filter
-      if (APP_DATA.tableDriverFilter && APP_DATA.tableDriverFilter !== 'all') {
-        const targetDriver = APP_DATA.drivers.find(d => d.id === APP_DATA.tableDriverFilter);
-        const dClean = targetDriver ? targetDriver.name.replace(/^นาย\s*/, '').trim() : '';
-        filtered = filtered.filter(l => {
-          const act = (l.Actual_Driver || '').replace(/^นาย\s*/, '').trim();
-          return act === dClean || act.includes(dClean.split(' ')[0]);
-        });
-      }
-
-      // 3. Sorting
-      filtered.sort((a, b) => {
-        const da = parseDate(a.Start_Datetime) || new Date(0);
-        const db = parseDate(b.Start_Datetime) || new Date(0);
-        const aIsFutureOrToday = da.getTime() >= todayStart;
-        const bIsFutureOrToday = db.getTime() >= todayStart;
-
-        if (aIsFutureOrToday && bIsFutureOrToday) {
-          return da.getTime() - db.getTime();
-        } else if (aIsFutureOrToday) {
-          return -1;
-        } else if (bIsFutureOrToday) {
-          return 1;
-        } else {
-          return db.getTime() - da.getTime();
-        }
-      });
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="6" class="py-8 text-center text-slate-500 text-sm">
-              <i class="fa-regular fa-folder-open text-2xl mb-1.5 block text-slate-400"></i>
-              <span>ไม่พบรายการขอใช้รถตามเงื่อนไขที่เลือก</span>
-            </td>
-          </tr>
-        `;
-        return;
-      }
-
-      tbody.innerHTML = filtered.map(log => {
-        const sDate = parseDate(log.Start_Datetime);
-        const eDate = parseDate(log.End_Datetime);
-
-        let tripBadge = '';
-        const tType = (log.Trip_Type || '').trim();
-        if (tType.includes('1.') || tType.includes('ค้างรอวันกลับ')) {
-          tripBadge = '<span class="text-xs font-semibold bg-purple-100 text-purple-800 border border-purple-300 px-2.5 py-0.5 rounded-full whitespace-nowrap">🟣 อยู่ค้างรอวันกลับ</span>';
-        } else if (tType.includes('3.') || tType.includes('ไปรับวันกลับ')) {
-          tripBadge = '<span class="text-xs font-semibold bg-orange-100 text-orange-800 border border-orange-300 px-2.5 py-0.5 rounded-full whitespace-nowrap">🟠 ไปส่ง-ไปรับวันกลับ</span>';
-        } else if (tType.includes('4.') || tType.includes('เที่ยวเดียว')) {
-          tripBadge = '<span class="text-xs font-semibold bg-sky-100 text-sky-800 border border-sky-300 px-2.5 py-0.5 rounded-full whitespace-nowrap">🔵 ส่ง/รับเที่ยวเดียว</span>';
-        } else {
-          tripBadge = '<span class="text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-0.5 rounded-full whitespace-nowrap">🟢 ไป-กลับวันเดียว</span>';
-        }
-
-        const isOffShift = log.Work_Type && (log.Work_Type.includes('นอก') || log.Work_Type.includes('เสริม'));
-        let workBadge = '';
-        if (!isOffShift && log.Work_Type === 'งานในเวร') {
-          workBadge = '<span class="text-xs font-semibold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 rounded-full whitespace-nowrap"><i class="fa-solid fa-check mr-1"></i>ในเวร</span>';
-        } else {
-          workBadge = '<span class="text-xs font-semibold text-amber-900 bg-amber-100 border border-amber-300 px-2.5 py-0.5 rounded-full whitespace-nowrap"><i class="fa-solid fa-bell mr-1"></i>ปฏิบัติงานนอกเหนือตารางเวร</span>';
-        }
-
-        const expenseVal = log.Cash_Use || log.Expense_Claim || '';
-        const isNoExpense = expenseVal && expenseVal.includes('ไม่');
-        const expenseBadge = isNoExpense
-          ? '<span class="text-2xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">ไม่เบิก</span>'
-          : '<span class="text-2xs text-emerald-800 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">💰 เบิก</span>';
-
-        const actName = (log.Actual_Driver || '').replace(/^นาย\s*/, '').trim();
-        const dObj = APP_DATA.drivers.find(d => d.name.includes(actName.split(' ')[0]) || actName.includes(d.name.split(' ')[0]));
-        const dColor = (dObj && DRIVER_COLORS[dObj.id]) ? DRIVER_COLORS[dObj.id] : null;
-
-        const isToday = sDate && formatDate(sDate) === formatDate(now);
-        let rowBg = '';
-        if (isToday) {
-          rowBg = 'bg-emerald-50/80 border-l-4 border-l-emerald-600 shadow-2xs';
-        } else if (dColor) {
-          rowBg = `${dColor.bgLight}/40 hover:${dColor.bgLight}/70 border-l-4 ${dColor.cardBorderTop.replace('border-t-4 border-t-', 'border-l-')}`;
-        } else {
-          rowBg = 'hover:bg-slate-50 border-l-4 border-l-slate-200';
-        }
-
-        return `
-          <tr class="${rowBg} transition border-b border-slate-100">
-            <td class="py-3 px-3.5">
-              <div class="font-bold text-slate-900 text-xs sm:text-sm">${sDate ? formatDateShort(sDate) : log.Start_Datetime}</div>
-              <div class="text-xs text-slate-500 font-mono">${sDate ? formatTime(sDate) : ''} - ${eDate ? formatTime(eDate) : ''}</div>
-            </td>
-            <td class="py-3 px-3.5">
-              <div class="font-bold text-slate-900 text-xs sm:text-sm">${log.Requester_Name || '-'}</div>
-              <div class="text-xs text-slate-500 truncate max-w-[180px]">${log.Objective || '-'}</div>
-            </td>
-            <td class="py-3 px-3.5">
-              <div class="text-slate-900 font-extrabold text-xs sm:text-sm flex items-center gap-1.5">
-                <i class="fa-solid fa-location-dot text-rose-600 text-xs shrink-0"></i>
-                <span>${log.Location_End || '-'}</span>
-              </div>
-              <div class="text-2xs text-slate-500 flex items-center gap-1 mt-0.5">
-                <i class="fa-solid fa-map-pin text-rose-500 text-[10px] shrink-0"></i>
-                <span>${log.Location_Start || 'วิทยาเขต สปร.'} ➔ ${log.Location_End || '-'}</span>
-              </div>
-            </td>
-            <td class="py-3 px-3.5">
-              <div class="space-y-1">
-                <div>${tripBadge}</div>
-                <div>${expenseBadge}</div>
-              </div>
-            </td>
-            <td class="py-3 px-3.5">
-              <div class="font-bold text-slate-900 text-xs sm:text-sm flex items-center gap-1.5">
-                ${dColor ? `<span class="w-2.5 h-2.5 rounded-full ${dColor.dot} shadow-2xs ring-1 ring-white"></span>` : ''}
-                <span>${log.Actual_Driver || '-'}</span>
-              </div>
-              <div class="text-2xs text-slate-500">เวรหลัก: ${log.Shift_Driver || '-'}</div>
-            </td>
-            <td class="py-3 px-3.5 text-center">${workBadge}</td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    function filterLogs(filterType) {
-      APP_DATA.currentFilter = filterType;
-      ['all', 'today', 'week', 'month', 'future'].forEach(f => {
-        const btn = document.getElementById('filter-' + f);
-        if (!btn) return;
-        if (f === filterType) {
-          btn.className = 'chip-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-600 text-white shadow-sm';
-        } else {
-          btn.className = 'chip-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium bg-white text-slate-700 hover:text-slate-900 border border-slate-200 shadow-xs';
-        }
-      });
-      renderLogsTable();
-    }
-
-    function onTableDriverFilterChanged() {
-      const select = document.getElementById('table-driver-filter');
-      APP_DATA.tableDriverFilter = select.value;
-      renderLogsTable();
-    }
-
-    function resetTableFilters() {
-      APP_DATA.currentFilter = 'all';
-      APP_DATA.tableDriverFilter = 'all';
-      const select = document.getElementById('table-driver-filter');
-      if (select) select.value = 'all';
-      filterLogs('all');
-    }
-
-    // ==========================================
-    // MODULE 2: ZERO-TYPING FORM
-    // ==========================================
-    function setDefaultFormValues() {
-      const today = new Date();
-      document.getElementById('form-doc-date').value = formatDate(today);
-      document.getElementById('form-location-start').value = 'วิทยาเขต สปร.';
-      
-      const tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      tomorrow.setHours(9, 0, 0, 0);
-
-      const returnTime = new Date(tomorrow);
-      returnTime.setHours(16, 30, 0, 0);
-
-      document.getElementById('form-start-datetime').value = formatDateTimeLocal(tomorrow);
-      document.getElementById('form-end-datetime').value = formatDateTimeLocal(returnTime);
-      
-      selectTripType('2. ไป-กลับภายในวันเดียว');
-      selectExpenseClaim('1. เบิกค่าใช้จ่าย');
-      onDateTimeChanged();
-    }
-
-    function setDocDatePreset(type) {
-      const d = new Date();
-      if (type === 'yesterday') d.setDate(d.getDate() - 1);
-      document.getElementById('form-doc-date').value = formatDate(d);
-    }
-
-    function appendRequesterPrefix(prefix) {
-      const el = document.getElementById('form-requester-name');
-      const cur = el.value.replace(/^(อ\.|ผศ\.|รศ\.|ดร\.|เจ้าหน้าที่)\s*/, '').trim();
-      el.value = prefix + (cur ? ' ' + cur : ' ');
-      el.focus();
-    }
-
-    function setPositionPreset(pos) {
-      document.getElementById('form-position').value = pos;
-    }
-
-    function setObjectivePreset(val) {
-      const el = document.getElementById('form-objective');
-      const cur = el.value.replace(/^(นิเทศ|ประชุม|อบรม|สัมมนา)\s*/, '').trim();
-      el.value = val + (cur ? ' ' + cur : ' ');
-      el.focus();
-    }
-
-    function setOriginPreset(origin) {
-      document.getElementById('form-location-start').value = origin;
-    }
-
-    function setDestPreset(dest) {
-      document.getElementById('form-location-end').value = dest;
-    }
-
-    function selectTripType(typeStr) {
-      document.getElementById('form-trip-type').value = typeStr;
-      
-      const b1 = document.getElementById('trip-btn-1');
-      const b2 = document.getElementById('trip-btn-2');
-      const b3 = document.getElementById('trip-btn-3');
-      const b4 = document.getElementById('trip-btn-4');
-
-      [b1, b2, b3, b4].forEach(b => {
-        if (!b) return;
-        b.className = 'trip-type-btn chip-btn py-2.5 px-2 rounded-xl text-xs font-medium text-center border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 shadow-xs';
-      });
-
-      if (typeStr.includes('1.') || typeStr.includes('ค้างรอวันกลับ')) {
-        b1.className = 'trip-type-btn chip-btn py-2.5 px-2 rounded-xl text-xs font-bold text-center border border-purple-500 bg-purple-50 text-purple-800 shadow-sm';
-      } else if (typeStr.includes('2.') || typeStr.includes('วันเดียว')) {
         b2.className = 'trip-type-btn chip-btn py-2.5 px-2 rounded-xl text-xs font-bold text-center border border-emerald-500 bg-emerald-50 text-emerald-800 shadow-sm';
       } else if (typeStr.includes('3.') || typeStr.includes('ไปรับวันกลับ')) {
         b3.className = 'trip-type-btn chip-btn py-2.5 px-2 rounded-xl text-xs font-bold text-center border border-orange-500 bg-orange-50 text-orange-800 shadow-sm';
@@ -2857,6 +2729,7 @@
 
     function resetForm() {
       document.getElementById('usage-log-form').reset();
+      APP_DATA.selectedDrivers = [];
       setDefaultFormValues();
       document.getElementById('form-actual-driver').value = '';
       selectTripType('2. ไป-กลับภายในวันเดียว');

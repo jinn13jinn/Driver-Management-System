@@ -323,46 +323,49 @@ function saveUsageLog(payload) {
   // 1. Shift Lookup Rule
   const shiftInfo = lookupShiftDriver(payload.startDatetime);
   const shiftDriver = shiftInfo.driverName || payload.shiftDriver || '';
-  const actualDriver = payload.actualDriver || '';
 
-  // 3. Work Type Auto-Classification
-  let workType = 'งานในเวร';
-  if (shiftDriver && actualDriver) {
-    const sName = shiftDriver.replace(/^นาย\s*/, '').trim();
-    const aName = actualDriver.replace(/^นาย\s*/, '').trim();
-    if (sName !== aName) {
-      workType = 'ปฏิบัติงานนอกเหนือตารางเวร';
+  const driverList = Array.isArray(payload.actualDrivers) && payload.actualDrivers.length > 0
+    ? payload.actualDrivers
+    : [payload.actualDriver || ''];
+
+  driverList.forEach(actualDriver => {
+    let workType = 'งานในเวร';
+    if (shiftDriver && actualDriver) {
+      const sName = shiftDriver.replace(/^นาย\s*/, '').trim();
+      const aName = actualDriver.replace(/^นาย\s*/, '').trim();
+      if (sName !== aName) {
+        workType = 'ปฏิบัติงานนอกเหนือตารางเวร';
+      }
     }
-  }
 
-  const newRow = [
-    docDate,
-    payload.requesterName || '',
-    payload.position || '',
-    payload.objective || '',
-    payload.locationStart || 'วิทยาเขต สปร.',
-    payload.locationEnd || '',
-    payload.tripType || '2. ไป-กลับภายในวันเดียว',
-    startDatetime,
-    endDatetime,
-    payload.passengerCount ? Number(payload.passengerCount) : 1,
-    shiftDriver,
-    actualDriver,
-    workType,
-    payload.vehicleId || '',
-    createdAt,
-    payload.expenseClaim || '1. เบิกค่าใช้จ่าย'
-  ];
+    const newRow = [
+      docDate,
+      payload.requesterName || '',
+      payload.position || '',
+      payload.objective || '',
+      payload.locationStart || 'วิทยาเขต สปร.',
+      payload.locationEnd || '',
+      payload.tripType || '2. ไป-กลับภายในวันเดียว',
+      startDatetime,
+      endDatetime,
+      payload.passengerCount ? Number(payload.passengerCount) : 1,
+      shiftDriver,
+      actualDriver,
+      workType,
+      payload.vehicleId || '',
+      createdAt,
+      payload.expenseClaim || '1. เบิกค่าใช้จ่าย'
+    ];
 
-  sheet.appendRow(newRow);
+    sheet.appendRow(newRow);
+  });
 
   // Recalculate Monthly Summary
   syncMonthlySummary(startDatetime);
 
   return {
     success: true,
-    message: 'บันทึกข้อมูลการใช้รถเรียบร้อยแล้ว',
-    workType: workType,
+    message: 'บันทึกข้อมูลการใช้รถเรียบร้อยแล้ว (' + driverList.length + ' คัน/คน)',
     shiftDriver: shiftDriver
   };
 }

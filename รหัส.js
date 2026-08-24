@@ -11,10 +11,10 @@ const CONFIG = {
     'wassana.t@bcnsprnw.ac.th'
   ],
   DRIVERS: [
-    { id: 'D001', name: 'สุวิทย์ สิทธิไกร', phone: '081-111-1111', photo: 'https://lh5.googleusercontent.com/d/1hseQ7xnN1gUrLXr9qehGll2ncsTF-ZJX' },
-    { id: 'D002', name: 'จักรกฤษณ์ นาวิก', phone: '081-333-3333', photo: 'https://lh5.googleusercontent.com/d/1fnr5M_rlNsh1VE0G0YdLKWNGkFOzlrqT' },
-    { id: 'D003', name: 'ศักดิ์ชัย เสราชโสภา', phone: '081-222-2222', photo: 'https://lh5.googleusercontent.com/d/1ehA3DVigsAyXVgPjO9O2_CwsasZmVxZE' },
-    { id: 'D004', name: 'ธนาวุฒิ ยุติธรรมวรวาท', phone: '081-444-4444', photo: 'https://lh5.googleusercontent.com/d/1eCgCgAv3zJ2lKs4EscVzEggXHe7Rg6KV' }
+    { id: 'D001', name: 'สุวิทย์ สิทธิไกร', phone: '088-585-9957', photo: 'https://lh5.googleusercontent.com/d/1hseQ7xnN1gUrLXr9qehGll2ncsTF-ZJX' },
+    { id: 'D002', name: 'จักรกฤษณ์ นาวิก', phone: '064-826-4672', photo: 'https://lh5.googleusercontent.com/d/1fnr5M_rlNsh1VE0G0YdLKWNGkFOzlrqT' },
+    { id: 'D003', name: 'ศักดิ์ชัย เสราชโสภา', phone: '082-402-2112', photo: 'https://lh5.googleusercontent.com/d/1ehA3DVigsAyXVgPjO9O2_CwsasZmVxZE' },
+    { id: 'D004', name: 'ธนาวุฒิ ยุติธรรมวรวาท', phone: '061-332-3175', photo: 'https://lh5.googleusercontent.com/d/1eCgCgAv3zJ2lKs4EscVzEggXHe7Rg6KV' }
   ],
   LOGO_URL: 'https://lh5.googleusercontent.com/d/1fsZkrCDHOrfERVDD9Edeca7uMhtG765s',
   ORG_NAME: 'วิทยาลัยพยาบาลบรมราชชนนี สวรรค์ประชารักษ์ นครสวรรค์',

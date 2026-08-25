@@ -49,7 +49,7 @@ function include(filename) {
 /**
  * Get current user email and role
  */
-function getCurrentUser() {
+function getCurrentUser(clientEmail) {
   let email = '';
   try {
     email = Session.getActiveUser().getEmail() || '';
@@ -57,25 +57,58 @@ function getCurrentUser() {
     email = '';
   }
   
+  if (!email && clientEmail) {
+    email = String(clientEmail).trim().toLowerCase();
+  }
+
   const normalizedEmail = email.toLowerCase().trim();
   const isAdmin = CONFIG.ADMIN_EMAILS.map(e => e.toLowerCase()).includes(normalizedEmail);
   const isDomainUser = normalizedEmail.endsWith('@' + CONFIG.ALLOWED_DOMAIN) || isAdmin;
 
   return {
-    email: email || 'Guest User',
+    email: normalizedEmail || '',
     isAdmin: isAdmin,
     isDomainUser: isDomainUser,
-    role: isAdmin ? 'Admin' : (isDomainUser ? 'Viewer' : 'External')
+    role: isAdmin ? 'Admin' : (isDomainUser ? 'Viewer' : 'External'),
+    isAuthenticated: isDomainUser || isAdmin
   };
 }
 
 /**
- * Fetch All Initial Data for Frontend
+ * Verify user domain / credentials
  */
-function getInitialData() {
-  const ss = getSpreadsheet();
-  const user = getCurrentUser();
+function verifyDomainUser(email) {
+  const user = getCurrentUser(email);
+  return {
+    success: user.isAuthenticated,
+    user: user,
+    message: user.isAuthenticated 
+      ? 'เข้าสู่ระบบสำเร็จ' 
+      : 'ปฏิเสธการเข้าถึง: กรุณาใช้อีเมลองค์กร (@' + CONFIG.ALLOWED_DOMAIN + ')'
+  };
+}
+
+/**
+ * Fetch All Initial Data for Frontend (Protected by Domain Gate)
+ */
+function getInitialData(clientEmail) {
+  const user = getCurrentUser(clientEmail);
   
+  // Strict Domain Gate: If not authenticated with @bcnsprnw.ac.th, do not return data
+  if (!user.isAuthenticated) {
+    return {
+      user: user,
+      isAuthenticated: false,
+      config: {
+        logoUrl: CONFIG.LOGO_URL,
+        orgName: CONFIG.ORG_NAME,
+        systemName: CONFIG.SYSTEM_NAME,
+        allowedDomain: CONFIG.ALLOWED_DOMAIN
+      }
+    };
+  }
+
+  const ss = getSpreadsheet();
   const usageLogsSheet = ss.getSheetByName('Usage_Logs');
   const shiftMasterSheet = ss.getSheetByName('Shift_Master');
   const driverMasterSheet = ss.getSheetByName('Driver_Master');
@@ -104,18 +137,19 @@ function getInitialData() {
 
   return {
     user: user,
+    isAuthenticated: true,
     config: {
       logoUrl: CONFIG.LOGO_URL,
       orgName: CONFIG.ORG_NAME,
       systemName: CONFIG.SYSTEM_NAME,
-      adminEmails: CONFIG.ADMIN_EMAILS
+      allowedDomain: CONFIG.ALLOWED_DOMAIN
     },
     drivers: drivers,
     usageLogs: usageLogs,
     shiftMaster: shiftMaster,
-    leaveLogs: leaveLogs,
     monthlySummary: monthlySummary,
-    auditLogs: auditLogs
+    auditLogs: auditLogs,
+    leaveLogs: leaveLogs
   };
 }
 

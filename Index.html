@@ -146,11 +146,15 @@
         </div>
       </div>
 
-      <!-- User & Refresh -->
-      <div class="flex items-center gap-3">
+      <!-- User & Refresh & Logout -->
+      <div class="flex items-center gap-2 sm:gap-3">
         <span id="user-email" class="hidden md:inline text-xs sm:text-sm text-slate-600 font-medium bg-slate-100 px-3 py-1 rounded-full border border-slate-200">user@bcnsprnw.ac.th</span>
         <button onclick="refreshData()" title="รีเฟรชข้อมูล" class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition border border-slate-200 shadow-sm">
           <i id="refresh-icon" class="fa-solid fa-rotate text-sm text-emerald-600"></i>
+        </button>
+        <button onclick="logoutDomainUser()" title="ออกจากระบบ" class="p-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 transition border border-rose-200 shadow-sm flex items-center gap-1 text-xs font-bold">
+          <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
+          <span class="hidden sm:inline">ออก</span>
         </button>
       </div>
 
@@ -1397,6 +1401,85 @@
         <button type="button" onclick="closeDriverSummaryModal()" class="px-5 py-2 rounded-xl text-xs sm:text-sm bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold">ปิด</button>
       </div>
     </div>
+  <!-- ========================================================================= -->
+  <!-- INSTITUTIONAL DOMAIN AUTH OVERLAY (@bcnsprnw.ac.th) -->
+  <!-- ========================================================================= -->
+  <div id="domain-auth-overlay" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 transition-all duration-300 hidden">
+    <div class="clean-card bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl border border-slate-200 text-center">
+      
+      <!-- Logo & Header -->
+      <div class="flex flex-col items-center space-y-3">
+        <div class="relative">
+          <img src="https://lh5.googleusercontent.com/d/1fsZkrCDHOrfERVDD9Edeca7uMhtG765s" alt="Logo" class="w-20 h-20 object-contain rounded-full bg-slate-50 p-1.5 border-2 border-emerald-500 shadow-md">
+          <span class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs shadow-sm">
+            <i class="fa-solid fa-shield-halved"></i>
+          </span>
+        </div>
+        
+        <div class="space-y-1">
+          <h2 class="text-lg sm:text-xl font-black text-slate-900">
+            ระบบบริหารการใช้รถของราชการ
+          </h2>
+          <p class="text-xs text-slate-500 font-normal">
+            วิทยาลัยพยาบาลบรมราชชนนี สวรรค์ประชารักษ์ นครสวรรค์
+          </p>
+        </div>
+
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-2xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-300 shadow-2xs">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+          <span>🔒 สำหรับบุคลากรภายใน (@bcnsprnw.ac.th)</span>
+        </div>
+      </div>
+
+      <!-- Domain Login Form -->
+      <form id="domain-login-form" onsubmit="handleDomainLogin(event)" class="space-y-4 text-left">
+        <div class="space-y-1.5">
+          <label class="block text-xs font-bold text-slate-700">
+            อีเมลองค์กรผู้ใช้งาน
+          </label>
+          <div class="relative flex items-center">
+            <span class="absolute left-3.5 text-slate-400 text-sm">
+              <i class="fa-solid fa-envelope"></i>
+            </span>
+            <input 
+              type="email" 
+              id="auth-input-email" 
+              placeholder="ชื่อผู้ใช้@bcnsprnw.ac.th" 
+              required
+              class="w-full pl-10 pr-4 py-3 rounded-2xl border border-slate-300 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition bg-slate-50 focus:bg-white shadow-2xs"
+            >
+          </div>
+          <p class="text-2xs text-slate-500">
+            * ใช้อีเมล Google Workspace ของวิทยาลัย (@bcnsprnw.ac.th)
+          </p>
+        </div>
+
+        <button 
+          type="submit" 
+          id="btn-auth-submit"
+          class="w-full py-3 px-4 rounded-2xl text-xs sm:text-sm font-black text-white bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 transition shadow-md flex items-center justify-center gap-2 active:scale-98"
+        >
+          <i class="fa-solid fa-right-to-bracket text-sm"></i>
+          <span>เข้าสู่ระบบบริหารรถ</span>
+        </button>
+      </form>
+
+      <!-- In-app Browser / External link help -->
+      <div class="pt-4 border-t border-slate-100 text-center space-y-2">
+        <p class="text-2xs text-slate-400">
+          หากเปิดผ่าน LINE หรือพบปัญหาการแสดงผล
+        </p>
+        <a 
+          href="https://script.google.com/macros/s/AKfycbz5I5daF1CTZn8LGyQwvFoL78BvvRSxjL96rHK1WzSAdyzRpCamP8_wbRTMvd-Ef-KN/exec" 
+          target="_blank" 
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-2xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition"
+        >
+          <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-emerald-600"></i>
+          <span>เปิดใน Chrome / Safari โดยตรง</span>
+        </a>
+      </div>
+
+    </div>
   </div>
 
   <!-- INSTITUTIONAL FOOTER -->
@@ -1527,6 +1610,8 @@
       const refreshIcon = document.getElementById('refresh-icon');
       if (refreshIcon) refreshIcon.classList.add('fa-spin');
 
+      const storedEmail = localStorage.getItem('BCNSPRNW_USER_EMAIL') || '';
+
       // Safety timeout: remove splash after 6 seconds maximum
       setTimeout(() => {
         const splash = document.getElementById('app-loading-splash');
@@ -1540,7 +1625,7 @@
         google.script.run
           .withSuccessHandler(onDataLoaded)
           .withFailureHandler(onDataError)
-          .getInitialData();
+          .getInitialData(storedEmail);
       } else {
         console.warn('Running outside Google Apps Script environment.');
         if (refreshIcon) refreshIcon.classList.remove('fa-spin');
@@ -1557,6 +1642,25 @@
         if (refreshIcon) refreshIcon.classList.remove('fa-spin');
 
         if (!data) return;
+
+        // Check if user is authenticated with @bcnsprnw.ac.th
+        const authOverlay = document.getElementById('domain-auth-overlay');
+        if (!data.isAuthenticated) {
+          if (authOverlay) {
+            authOverlay.classList.remove('hidden');
+            const emailInput = document.getElementById('auth-input-email');
+            if (emailInput && !emailInput.value) {
+              const stored = localStorage.getItem('BCNSPRNW_USER_EMAIL');
+              if (stored) emailInput.value = stored;
+            }
+          }
+          return;
+        } else {
+          if (authOverlay) authOverlay.classList.add('hidden');
+          if (data.user && data.user.email) {
+            localStorage.setItem('BCNSPRNW_USER_EMAIL', data.user.email);
+          }
+        }
 
         APP_DATA.user = data.user || { role: 'Viewer', isAdmin: false, email: '' };
         APP_DATA.drivers = data.drivers || [];
@@ -1607,6 +1711,80 @@
           setTimeout(() => splash.remove(), 400);
         }
       }
+    }
+
+    function handleDomainLogin(e) {
+      if (e) e.preventDefault();
+      const inputEl = document.getElementById('auth-input-email');
+      let email = inputEl ? inputEl.value.trim().toLowerCase() : '';
+      if (!email) return;
+
+      // Auto-append domain if user typed only prefix
+      if (!email.includes('@')) {
+        email += '@bcnsprnw.ac.th';
+        inputEl.value = email;
+      }
+
+      const btnSubmit = document.getElementById('btn-auth-submit');
+      if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> กำลังตรวจสอบสิทธิ์...';
+      }
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(res => {
+            if (btnSubmit) {
+              btnSubmit.disabled = false;
+              btnSubmit.innerHTML = '<i class="fa-solid fa-right-to-bracket text-sm"></i> <span>เข้าสู่ระบบบริหารรถ</span>';
+            }
+            if (res && res.success) {
+              localStorage.setItem('BCNSPRNW_USER_EMAIL', email);
+              const authOverlay = document.getElementById('domain-auth-overlay');
+              if (authOverlay) authOverlay.classList.add('hidden');
+              loadData();
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'ปฏิเสธการเข้าถึง',
+                text: res.message || 'กรุณาใช้อีเมลองค์กร (@bcnsprnw.ac.th) เท่านั้น',
+                confirmButtonColor: '#059669'
+              });
+            }
+          })
+          .withFailureHandler(err => {
+            if (btnSubmit) {
+              btnSubmit.disabled = false;
+              btnSubmit.innerHTML = '<i class="fa-solid fa-right-to-bracket text-sm"></i> <span>เข้าสู่ระบบบริหารรถ</span>';
+            }
+            Swal.fire({
+              icon: 'error',
+              title: 'เกิดข้อผิดพลาด',
+              text: err.message || err,
+              confirmButtonColor: '#059669'
+            });
+          })
+          .verifyDomainUser(email);
+      }
+    }
+
+    function logoutDomainUser() {
+      Swal.fire({
+        title: 'ออกจากระบบ?',
+        text: 'คุณต้องการออกจากระบบบริหารการใช้รถหรือไม่',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#e11d48',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'ออกจากระบบ',
+        cancelButtonText: 'ยกเลิก'
+      }).then(result => {
+        if (result.isConfirmed) {
+          localStorage.removeItem('BCNSPRNW_USER_EMAIL');
+          sessionStorage.clear();
+          location.reload();
+        }
+      });
     }
 
     function onDataError(err) {

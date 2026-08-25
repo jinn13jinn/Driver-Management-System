@@ -3,34 +3,259 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ระบบบริหารการใช้รถของราชการ - วิทยาลัยพยาบาลบรมราชชนนี สวรรค์ประชารักษ์</title>
+  <title>ระบบบริหารการใช้รถของราชการ - วสส.สวรรค์ประชารักษ์ นครสวรรค์</title>
   <link rel="icon" href="https://lh5.googleusercontent.com/d/1fsZkrCDHOrfERVDD9Edeca7uMhtG765s">
+
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', 'Inter', 'sans-serif'],
+            mono: ['Inter', 'monospace']
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+              950: '#052e16'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    body {
+      font-family: 'Prompt', sans-serif;
+      background-color: #0b1329;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.15) 0px, transparent 50%);
+      background-attachment: fixed;
     }
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background-color: #f8fafc;
+    .glass-card {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
     }
-    iframe {
-      width: 100vw;
-      height: 100vh;
-      height: 100dvh;
-      border: 0;
-      display: block;
+    .glass-dark {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .glow-effect {
+      box-shadow: 0 0 50px -10px rgba(16, 185, 129, 0.35);
     }
   </style>
 </head>
-<body>
-  <iframe 
-    src="https://script.google.com/macros/s/AKfycbz5I5daF1CTZn8LGyQwvFoL78BvvRSxjL96rHK1WzSAdyzRpCamP8_wbRTMvd-Ef-KN/exec" 
-    allow="clipboard-write; camera; geolocation; microphone" 
-    title="ระบบบริหารการใช้รถของราชการ">
-  </iframe>
+<body class="min-h-screen text-slate-800 flex flex-col justify-between selection:bg-emerald-500 selection:text-white">
+
+  <!-- TOP APP BAR -->
+  <header class="sticky top-0 z-40 bg-slate-900/80 backdrop-blur-lg border-b border-slate-800 px-4 py-3 sm:px-6 shadow-md">
+    <div class="max-w-6xl mx-auto flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <img src="https://lh5.googleusercontent.com/d/1fsZkrCDHOrfERVDD9Edeca7uMhtG765s" alt="Logo" class="w-10 h-10 sm:w-11 sm:h-11 object-contain rounded-full bg-white/10 p-1 border border-white/20 shadow-sm">
+        <div>
+          <h1 class="text-sm sm:text-base font-bold text-white leading-tight flex items-center gap-2">
+            ระบบบริหารการใช้รถของราชการ
+            <span class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Official Portal</span>
+          </h1>
+          <p class="text-2xs sm:text-xs text-slate-400 font-normal">วิทยาลัยพยาบาลบรมราชชนนี สวรรค์ประชารักษ์ นครสวรรค์</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <a 
+          href="https://script.google.com/macros/s/AKfycbz5I5daF1CTZn8LGyQwvFoL78BvvRSxjL96rHK1WzSAdyzRpCamP8_wbRTMvd-Ef-KN/exec" 
+          class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 transition shadow-sm flex items-center gap-1.5 active:scale-95"
+        >
+          <span>เปิดเว็บแอป</span>
+          <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN HERO CONTAINER -->
+  <main class="max-w-5xl mx-auto px-4 py-8 sm:py-12 space-y-10 flex-1 w-full">
+
+    <!-- HERO SECTION -->
+    <div class="text-center space-y-5">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium backdrop-blur-md">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>ระบบบริการยานพาหนะและการเดินทางราชการ</span>
+      </div>
+
+      <div class="space-y-3">
+        <h2 class="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+          ระบบบริหารการใช้รถของราชการ
+        </h2>
+        <p class="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto font-light leading-relaxed">
+          ศูนย์รวมการตรวจสอบสถานะ พขร. ประจำวัน ตารางเวรปฏิบัติงาน บันทึกการขอใช้รถ และสถิติการใช้ยานพาหนะของวิทยาลัย
+        </p>
+      </div>
+
+      <!-- MAIN ACTION BUTTONS -->
+      <div class="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3.5 max-w-md mx-auto">
+        <a 
+          href="https://script.google.com/macros/s/AKfycbz5I5daF1CTZn8LGyQwvFoL78BvvRSxjL96rHK1WzSAdyzRpCamP8_wbRTMvd-Ef-KN/exec" 
+          class="w-full sm:w-auto flex-1 py-4 px-6 rounded-2xl text-sm sm:text-base font-black text-white bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-600 transition shadow-xl glow-effect flex items-center justify-center gap-2.5 active:scale-98"
+        >
+          <i class="fa-solid fa-car-side text-lg"></i>
+          <span>เข้าสู่ระบบบริหารรถราชการ</span>
+          <i class="fa-solid fa-arrow-right text-xs ml-1"></i>
+        </a>
+      </div>
+
+      <p class="text-2xs text-slate-400 flex items-center justify-center gap-1.5">
+        <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+        <span>เข้าใช้งานด้วยบัญชี Google Workspace ของวิทยาลัย (@bcnsprnw.ac.th)</span>
+      </p>
+    </div>
+
+    <!-- 3 SYSTEM MODULES CARDS -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+      
+      <!-- Card 1 -->
+      <div class="glass-card rounded-3xl p-6 border border-slate-200/80 shadow-lg space-y-3.5 hover:translate-y-[-2px] transition duration-200">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl shadow-xs">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-base font-black text-slate-900">
+            1. ศูนย์สถานะ พขร. สด
+          </h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            หน้าแรกแสดงสถานะความพร้อมของ พขร. 4 ท่าน พร้อมปฏิบัติงาน หรือออกปฏิบัติงาน และแถบเวรหลักสัปดาห์นี้
+          </p>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="glass-card rounded-3xl p-6 border border-slate-200/80 shadow-lg space-y-3.5 hover:translate-y-[-2px] transition duration-200">
+        <div class="w-12 h-12 rounded-2xl bg-teal-100 text-teal-700 flex items-center justify-center text-xl shadow-xs">
+          <i class="fa-solid fa-calendar-check"></i>
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-base font-black text-slate-900">
+            2. ปฏิทิน 3 เลเยอร์ & สถิติ
+          </h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            ปฏิทินแยกสี พขร. รายบุคคล สถิติ 4 ประเภทงาน (นิเทศ, บริหาร, ประชุม, นำส่ง) พร้อมสลับโหมดตารางเวรและวันลา
+          </p>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="glass-card rounded-3xl p-6 border border-slate-200/80 shadow-lg space-y-3.5 hover:translate-y-[-2px] transition duration-200">
+        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl shadow-xs">
+          <i class="fa-solid fa-user-shield"></i>
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-base font-black text-slate-900">
+            3. บันทึก & จัดการตารางเวร
+          </h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            ฟอร์มบันทึก 1-Tap พอดีจอมือถือ ระบบค้นหา/แก้ไข/ลบงานใช้รถ และระบบสร้างตารางเวรหมุนเวียนอัตโนมัติ (Admin)
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DRIVERS DIRECT CONTACT ROSTER -->
+    <div class="glass-dark rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-xl space-y-5 text-white">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-4">
+        <div>
+          <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
+            <i class="fa-solid fa-users text-emerald-400"></i>
+            <span>ทำเนียบพนักงานขับรถราชการ (พขร.)</span>
+          </h3>
+          <p class="text-xs text-slate-400">สามารถกดปุ่มโทรเพื่อติดต่อ พขร. ได้โดยตรง</p>
+        </div>
+        <span class="text-2xs px-3 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700 w-fit">
+          งานยานพาหนะ วสส.สวรรค์ประชารักษ์
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Driver 1 -->
+        <div class="bg-slate-800/80 rounded-2xl p-4 border border-slate-700/80 flex items-center gap-3.5 shadow-sm">
+          <img src="https://lh5.googleusercontent.com/d/1hseQ7xnN1gUrLXr9qehGll2ncsTF-ZJX" alt="สุวิทย์" class="w-13 h-13 rounded-xl object-cover bg-slate-900 border border-slate-600 shrink-0" style="width: 52px; height: 52px;">
+          <div class="space-y-1 flex-1 min-w-0">
+            <h4 class="text-xs sm:text-sm font-bold text-white truncate">สุวิทย์ สิทธิไกร</h4>
+            <a href="tel:0885859957" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-2xs font-bold bg-emerald-600/30 text-emerald-300 hover:bg-emerald-600/50 border border-emerald-500/40 transition">
+              <i class="fa-solid fa-phone text-[10px]"></i> <span>088-585-9957</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Driver 2 -->
+        <div class="bg-slate-800/80 rounded-2xl p-4 border border-slate-700/80 flex items-center gap-3.5 shadow-sm">
+          <img src="https://lh5.googleusercontent.com/d/1fnr5M_rlNsh1VE0G0YdLKWNGkFOzlrqT" alt="จักรกฤษณ์" class="w-13 h-13 rounded-xl object-cover bg-slate-900 border border-slate-600 shrink-0" style="width: 52px; height: 52px;">
+          <div class="space-y-1 flex-1 min-w-0">
+            <h4 class="text-xs sm:text-sm font-bold text-white truncate">จักรกฤษณ์ นาวิก</h4>
+            <a href="tel:0648264672" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-2xs font-bold bg-emerald-600/30 text-emerald-300 hover:bg-emerald-600/50 border border-emerald-500/40 transition">
+              <i class="fa-solid fa-phone text-[10px]"></i> <span>064-826-4672</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Driver 3 -->
+        <div class="bg-slate-800/80 rounded-2xl p-4 border border-slate-700/80 flex items-center gap-3.5 shadow-sm">
+          <img src="https://lh5.googleusercontent.com/d/1ehA3DVigsAyXVgPjO9O2_CwsasZmVxZE" alt="ศักดิ์ชัย" class="w-13 h-13 rounded-xl object-cover bg-slate-900 border border-slate-600 shrink-0" style="width: 52px; height: 52px;">
+          <div class="space-y-1 flex-1 min-w-0">
+            <h4 class="text-xs sm:text-sm font-bold text-white truncate">ศักดิ์ชัย เสราชโสภา</h4>
+            <a href="tel:0824022112" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-2xs font-bold bg-emerald-600/30 text-emerald-300 hover:bg-emerald-600/50 border border-emerald-500/40 transition">
+              <i class="fa-solid fa-phone text-[10px]"></i> <span>082-402-2112</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Driver 4 -->
+        <div class="bg-slate-800/80 rounded-2xl p-4 border border-slate-700/80 flex items-center gap-3.5 shadow-sm">
+          <img src="https://lh5.googleusercontent.com/d/1eCgCgAv3zJ2lKs4EscVzEggXHe7Rg6KV" alt="ธนาวุฒิ" class="w-13 h-13 rounded-xl object-cover bg-slate-900 border border-slate-600 shrink-0" style="width: 52px; height: 52px;">
+          <div class="space-y-1 flex-1 min-w-0">
+            <h4 class="text-xs sm:text-sm font-bold text-white truncate">ธนาวุฒิ ยุติธรรมวรวาท</h4>
+            <a href="tel:0613323175" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-2xs font-bold bg-emerald-600/30 text-emerald-300 hover:bg-emerald-600/50 border border-emerald-500/40 transition">
+              <i class="fa-solid fa-phone text-[10px]"></i> <span>061-332-3175</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- INSTITUTIONAL FOOTER -->
+  <footer class="border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-500 space-y-1 shadow-inner">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col items-center justify-center space-y-1">
+      <p class="font-medium text-slate-400 text-xs">
+        สงวนลิขสิทธิ์โดย งานเทคโนโลยีและสารสนเทศ วิทยาลัยพยาบาลบรมราชชนนี สวรรค์ประชารักษ์ นครสวรรค์
+      </p>
+      <p class="font-mono text-slate-600 text-2xs">
+        copyright 2026@CitCentre BCNSPRNW • Driver Management System
+      </p>
+    </div>
+  </footer>
+
 </body>
 </html>

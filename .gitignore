@@ -3,3 +3,11 @@ node_modules/
 .DS_Store
 Thumbs.db
 *.log
+
+# Private Backend & Institutional Source Code (Protected)
+/Index.html
+/รหัส.js
+/appsscript.json
+/.clasp.json
+/skill.md
+/system_specification.md

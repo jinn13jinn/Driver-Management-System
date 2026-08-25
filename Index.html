@@ -148,7 +148,7 @@
 
       <!-- User & Refresh & Logout -->
       <div class="flex items-center gap-2 sm:gap-3">
-        <span id="user-email" class="hidden md:inline text-xs sm:text-sm text-slate-600 font-medium bg-slate-100 px-3 py-1 rounded-full border border-slate-200">user@bcnsprnw.ac.th</span>
+        <span id="user-email" class="hidden md:inline text-xs sm:text-sm text-slate-600 font-medium bg-slate-100 px-3 py-1 rounded-full border border-slate-200">กำลังเชื่อมต่อ...</span>
         <button onclick="refreshData()" title="รีเฟรชข้อมูล" class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition border border-slate-200 shadow-sm">
           <i id="refresh-icon" class="fa-solid fa-rotate text-sm text-emerald-600"></i>
         </button>
@@ -598,13 +598,27 @@
     <section id="view-module2" class="hidden space-y-5">
       
       <!-- Non-admin Warning Banner -->
-      <div id="non-admin-alert-2" class="hidden clean-card rounded-2xl p-8 text-center border-l-4 border-l-rose-500 space-y-2 bg-rose-50/50">
-        <div class="text-4xl text-rose-500 mb-1"><i class="fa-solid fa-lock"></i></div>
-        <h3 class="text-base font-bold text-slate-900">เฉพาะผู้ดูแลระบบ (Admin) เท่านั้น</h3>
-        <p class="text-xs text-slate-600 max-w-md mx-auto">ฟังก์ชันบันทึกและแก้ไขข้อมูลการใช้รถ อนุญาตเฉพาะ Admin ที่ได้รับมอบหมายเท่านั้น</p>
+      <div id="non-admin-alert-2" class="clean-card rounded-3xl p-8 sm:p-12 text-center border border-slate-200 space-y-4 bg-white shadow-sm max-w-lg mx-auto mt-6">
+        <div class="w-16 h-16 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mx-auto text-2xl shadow-2xs">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-base sm:text-lg font-bold text-slate-900">เฉพาะผู้ดูแลระบบ (Admin Only)</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">
+            ระบบบันทึกและจัดการการขอใช้รถราชการ อนุญาตให้เฉพาะผู้ดูแลระบบที่ได้รับมอบหมายเท่านั้น
+          </p>
+        </div>
+        <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-2">
+          <button onclick="switchTab('home')" class="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition">
+            กลับหน้าแรก
+          </button>
+          <button onclick="logoutDomainUser()" class="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition">
+            เข้าสู่ระบบด้วยอีเมล Admin
+          </button>
+        </div>
       </div>
 
-      <div id="admin-content-2" class="space-y-5">
+      <div id="admin-content-2" class="hidden space-y-5">
 
         <!-- SMART MOBILE-FIRST FORM -->
         <div class="clean-card rounded-2xl p-4 sm:p-6 border border-amber-300 shadow-md">
@@ -975,13 +989,27 @@
     <section id="view-module3" class="hidden space-y-5">
       
       <!-- Non-admin Warning Banner -->
-      <div id="non-admin-alert-3" class="hidden clean-card rounded-2xl p-8 text-center border-l-4 border-l-rose-500 space-y-2 bg-rose-50/50">
-        <div class="text-4xl text-rose-500 mb-1"><i class="fa-solid fa-lock"></i></div>
-        <h3 class="text-base font-bold text-slate-900">เฉพาะผู้ดูแลระบบ (Admin) เท่านั้น</h3>
-        <p class="text-xs text-slate-600 max-w-md mx-auto">ฟังก์ชันจัดการตารางเวร อนุญาตเฉพาะ Admin เท่านั้น</p>
+      <div id="non-admin-alert-3" class="clean-card rounded-3xl p-8 sm:p-12 text-center border border-slate-200 space-y-4 bg-white shadow-sm max-w-lg mx-auto mt-6">
+        <div class="w-16 h-16 rounded-full bg-sky-100 text-sky-700 flex items-center justify-center mx-auto text-2xl shadow-2xs">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-base sm:text-lg font-bold text-slate-900">เฉพาะผู้ดูแลระบบ (Admin Only)</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">
+            ฟังก์ชันการจัดตารางเวร สลับเวร และบันทึกวันลา อนุญาตให้เฉพาะผู้ดูแลระบบเท่านั้น
+          </p>
+        </div>
+        <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-2">
+          <button onclick="switchTab('home')" class="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition">
+            กลับหน้าแรก
+          </button>
+          <button onclick="logoutDomainUser()" class="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 transition">
+            เข้าสู่ระบบด้วยอีเมล Admin
+          </button>
+        </div>
       </div>
 
-      <div id="admin-content-3" class="space-y-5">
+      <div id="admin-content-3" class="hidden space-y-5">
         
         <!-- 1. MODULE 3 CALENDAR VIEW (ปฏิทินแสดงภาพรวมตารางเวรประจำเดือน) -->
         <div class="clean-card rounded-2xl p-4 sm:p-5 space-y-4">
